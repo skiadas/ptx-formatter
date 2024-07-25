@@ -3,10 +3,11 @@
 import re
 from enum import Enum
 
+
 class BlankLines(str, Enum):
-    few = "few"
-    some = "some"
-    many = "many"
+  few = "few"
+  some = "some"
+  many = "many"
 
 
 RE_OPEN_TAG = re.compile(r"^<(\w\S*?)(\s.*?|>)$")

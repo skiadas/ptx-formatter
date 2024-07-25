@@ -17,6 +17,7 @@ def version_callback(value: bool):
 
 app = typer.Typer()
 
+
 @app.command()
 def mainPtx(
     addDocId: Annotated[
@@ -90,6 +91,7 @@ def mainPtx(
                          addDocumentIdentifier=addDocId,
                          indent="\t" if tabIndent else " " * indent)
   (outputFile or sys.stdout).write(result)
+
 
 def main():
   app()
