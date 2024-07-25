@@ -27,11 +27,18 @@ jobs:
       uses: abatilo/actions-poetry@v2
       with:
         poetry-version: "1.8.3"
+    - name: Setup a local virtual environment
+      run: |
+        poetry config virtualenvs.create true --local
+        poetry config virtualenvs.in-project true --local
+    - uses: actions/cache@v3
+      name: Cache virtual environment based on dependencies lock file
+      with:
+        path: ./.venv
+        key: venv-${{ hashFiles('poetry.lock') }}
     - name: Install dependencies
       run: |
         poetry install
-        #    pip install flake8
-        # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with yapf
       run: |
         poetry run yapf --recursive --diff .
