@@ -1,0 +1,29 @@
+[tool.poetry]
+name = "ptx-formatter"
+version = "0.1.0"
+description = ""
+authors = ["Haris Skiadas <cskiadas@gmail.com>"]
+readme = "README.md"
+
+# Not sure it is useful, but to generate automated docs:
+# poetry run python -m typer ptx_formatter utils docs --output generatedDocs.md --name ptx-format
+
+[tool.poetry.dependencies]
+python = "^3.12"
+typer = {extras = ["all"], version = "^0.12.3"}
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.1"
+pytest-clarity = "^1.0.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+ptx-format = "ptx_formatter:main"
+
+[tool.yapf]
+based_on_style = "google"
+indent_width = 2
