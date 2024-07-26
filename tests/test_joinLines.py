@@ -4,7 +4,6 @@ from os.path import dirname, join
 from ptx_formatter.formatter import joinLines
 
 
-
 class TestJoinLines(unittest.TestCase):
 
   def test_verbatim_is_not_changed(self):
