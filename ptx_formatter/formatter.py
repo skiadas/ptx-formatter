@@ -13,7 +13,7 @@ class BlankLines(str, Enum):
 
 
 RE_OPEN_TAG = re.compile(r"^<(\w\S*?)(\s.*?|>)$")
-RE_CLOSE_TAG = re.compile(r"^</(\w\S*?)(\s.*?|>)(.?)$")
+RE_CLOSE_TAG = re.compile(r"^</(\w\S*?)(\s.*?|>)$")
 
 newlineTags = docStructure + docSecs + docEnvs + nestable_tags + ["xi:include"]
 
@@ -65,13 +65,12 @@ def formatPretext(
 ) -> str:
   # First clean up document so that each line is a single tag when appropriate.
   allText = joinLines(allText)
-
   for btag in blockTags:
     if ("<" + btag) in allText:
       # start tag can be <tag>, <tag attr="val">, or <tag xmlns="..."> but shouldn't
       # be self closing (no self closing tag would have xmlns in it)
       startTag = re.compile("<" + btag + "(>|([^/]*?)>|(.*xmlns.*?)>)")
-      endTag = re.compile("</" + btag + ">(.?)")
+      endTag = re.compile("</" + btag + ">")
       allText = startTag.sub(r"\n\g<0>\n", allText)
       allText = endTag.sub(r"\n\g<0>\n", allText)
 

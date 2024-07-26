@@ -19,7 +19,10 @@ fixedExpressions = [
 <response>
   <p>Another paragraph</p>
 </response>""", """<p>A paragraph</p>
-<p>Another paragraph</p>"""
+<p>Another paragraph</p>""", """<p>
+<ul>
+</ul>
+</p>"""
 ]
 
 
