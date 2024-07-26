@@ -2,7 +2,7 @@
 name = "ptx-formatter"
 version = "0.1.0"
 description = ""
-authors = ["Haris Skiadas <cskiadas@gmail.com>"]
+authors = ["Haris Skiadas <cskiadas@gmail.com>", "Barb Wahl <barb.wahl.1960@gmail.com>"]
 readme = "README.md"
 
 # Not sure it is useful, but to generate automated docs:
