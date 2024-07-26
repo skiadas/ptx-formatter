@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<listing>
+  <program language="python" interactive="activecode">
+    <input>
+    class MyClass:
+    ^^^^
+      def add(a,b):
+        return 4
+    </input>
+    <tests>
+    from unittest.gui import TestCaseGui
+
+    class myTests(TestCaseGui):
+
+      def testOne(self):
+        self.assertEqual(MyClass().add(2,2), 4, "Adding two identical integers")
+        self.assertEqual(MyClass().add(7,13), 20, "Adding two different integers")
+        self.assertAlmostEqual(MyClass().add(2.0,3.0), 5.0, 5, "Adding two decimal numbers")
+
+    myTests().main()
+    </tests>
+  </program>
+</listing>

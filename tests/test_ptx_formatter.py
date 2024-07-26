@@ -3,7 +3,24 @@ import unittest
 from os.path import dirname, join
 from ptx_formatter.formatter import formatPretext
 
-sampleFiles = []  # TODO: create test files
+# Turn this on if you want result files produced
+# for manual comparison
+WRITE_RESULT_FILES = False
+
+sampleFiles = ["fewNewlines.ptx",
+               "fewWithListing.ptx"]  # TODO: create more test files
+
+fixedExpressions = [
+    """<premise>
+  <p>A paragraph</p>
+</premise>""", """<premise>
+  <p>A paragraph</p>
+</premise>
+<response>
+  <p>Another paragraph</p>
+</response>""", """<p>A paragraph</p>
+<p>Another paragraph</p>"""
+]
 
 
 class TestPtxFormatter(unittest.TestCase):
@@ -15,9 +32,15 @@ class TestPtxFormatter(unittest.TestCase):
                 "r",
                 encoding="utf-8") as f:
         data = f.read()
-        transformedData = formatPretext(data)
-        with open(join(dirname(__file__), "files", "result-" + filename),
-                  "w",
-                  encoding="utf-8") as f2:
-          f2.write(transformedData)
+        transformedData = formatPretext(data) + "\n"
+        if WRITE_RESULT_FILES:
+          with open(join(dirname(__file__), "files", "result-" + filename),
+                    "w",
+                    encoding="utf-8") as f2:
+            f2.write(transformedData)
         self.assertEqual(data, transformedData)
+
+  def test_formatter_keeps_expression_same(self):
+    self.maxDiff = None
+    for expr in fixedExpressions:
+      self.assertEqual(formatPretext(expr), expr)

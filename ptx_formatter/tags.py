@@ -16,7 +16,7 @@ docStructure = [
     "dedication",
     "docinfo",
     "editor",
-    "feedback",
+    # "feedback",   Removed by us
     "frontmatter",
     "google",
     "html",
@@ -107,6 +107,17 @@ docEnvs = [
     "theorem",
     "warning",
     "webwork",
+    # Added by us
+    "exercises",
+    "setup",
+    "var",
+    "condition",
+    "matches",
+    "match",
+    "premise",
+    "response",
+    "blocks",
+    "block"
 ]
 lineEndTags = [
     "address",
@@ -139,8 +150,7 @@ lineEndTags = [
     "year",
     "xi:include",
     # Added by us
-    "premise",
-    "response"
+    "p"
 ]
 # empty tags that should be on their own line
 docEmpty = [
@@ -161,7 +171,7 @@ nestable_tags = [
     "ul",
     "ol",
     "li",
-    "p",
+    # "p",  Removed by us
     "task",
     "figure",
     "sidebyside",

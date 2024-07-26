@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<section xml:id="sec-section-name" xmlns:xi="http://www.w3.org/2001/XInclude">
+  <title>Section Title</title>
+  <p>Text of section.</p>
+  <exercises xml:id="exer-grp-hw1">
+    <title>Homework 1</title>
+    <exercise>
+      <title>Fill in the blank</title>
+      <statement>
+        <p>How much is 2+2: <var /></p>
+      </statement>
+      <setup>
+        <var>
+          <condition number="4">
+            <feedback>That's right!</feedback>
+          </condition>
+          <condition string="[1-3]">
+            <feedback>So close!</feedback>
+          </condition>
+          <condition string=".*">
+            <feedback>what is wrong with you!</feedback>
+          </condition>
+        </var>
+      </setup>
+    </exercise>
+    <exercise>
+      <statement>
+        <p>And a <q>paragraph here to make</q> things interesting!</p>
+      </statement>
+    </exercise>
+    <exercise xml:id="exer-hw1-matching-question">
+      <title>Matching question</title>
+      <statement>
+        <p>Match the stuffs!</p>
+      </statement>
+      <matches>
+        <match order="1">
+          <premise>
+            The number 5
+          </premise>
+          <response>
+            An odd number
+          </response>
+        </match>
+        <match order="2">
+          <premise>
+            <p>The number 20</p>
+          </premise>
+          <response>
+            <p>An even number</p>
+          </response>
+        </match>
+        <match order="3">
+          <premise>
+            Favorite color
+          </premise>
+          <response>
+            Blue
+          </response>
+        </match>
+      </matches>
+    </exercise>
+    <exercise xml:id="exer-hw1-output-input">
+      <title>"Output the Input"</title>
+      <statement>
+        <p>Complete the program below by adding a line of code that will output a message reporting back what is input by the user. <em>The format of your output must match the format used in the example results for your solution to be correct.</em></p>
+        <p>NOTE: The first line of the program for getting input from the user is provided. Do not change this line.</p>
+      </statement>
+      <blocks>
+        <block order="2">
+          <p>This is a Parson's problem example.</p>
+        </block>
+        <block order="1">
+          <p>Here's another block.</p>
+        </block>
+      </blocks>
+    </exercise>
+  </exercises>
+</section>

@@ -24,9 +24,9 @@ def joinLines(fullText: str) -> str:
   verbatim = False
   lines = fullText.splitlines()
   # Start by adding the first two lines of the document.
-  joinedLines = lines[0:2]
+  joinedLines = lines[0:1]
   # Iterate through lines, joining lines when not in a verbatim block.
-  for line in lines[2:]:
+  for line in lines[1:]:
     # look for tags in a line
     openTagMatch = RE_OPEN_TAG.search(line.strip())
     closeTagMatch = RE_CLOSE_TAG.search(line.strip())
@@ -76,9 +76,9 @@ def formatPretext(
       allText = endTag.sub(r"\n\g<0>\n", allText)
 
   for tag in lineEndTags:
-    startTag = re.compile("<" + tag + "(.*?)>")
-    endTag = re.compile("</" + tag + ">(.?)")
-    selfCloseTag = re.compile("<" + tag + "(.*?)/>")
+    startTag = re.compile("<" + tag + r"(\s.*?)?>")
+    endTag = re.compile("</" + tag + ">")
+    selfCloseTag = re.compile("<" + tag + r"(\s.*?)?/>")
     allText = startTag.sub(r"\n\g<0>", allText)
     allText = endTag.sub(r"\g<0>\n", allText)
     allText = selfCloseTag.sub(r"\g<0>\n", allText)
@@ -92,7 +92,7 @@ def formatPretext(
     openTagMatch = RE_OPEN_TAG.search(line.strip())
     closeTagMatch = RE_CLOSE_TAG.search(line.strip())
     # // let selfCloseTagMatch = /^<(\w*?)(\s.*?\/>|\/>)$/.exec(trimmedLine);
-    if trimmedLine == "":
+    if trimmedLine == "" and not verbatim:
       continue
     elif trimmedLine.startswith("<?"):
       # It's the start line of the file:
