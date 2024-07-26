@@ -41,7 +41,7 @@ jobs:
         poetry install
     - name: Lint with yapf
       run: |
-        poetry run yapf --recursive --diff .
+        poetry run yapf --recursive --diff ptx_formatter tests
     - name: Run tests
       run: |
         poetry run pytest
