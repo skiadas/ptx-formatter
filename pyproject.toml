@@ -1,30 +1,48 @@
-[tool.poetry]
-name = "ptx-formatter"
-version = "0.1.0"
-description = ""
-authors = ["Haris Skiadas <cskiadas@gmail.com>", "Barb Wahl <barb.wahl.1960@gmail.com>"]
-readme = "README.md"
-
 # Not sure it is useful, but to generate automated docs:
 # poetry run python -m typer ptx_formatter utils docs --output generatedDocs.md --name ptx-format
 
-[tool.poetry.dependencies]
-python = "^3.12"
-typer = {extras = ["all"], version = "^0.12.3"}
-
-
-[tool.poetry.group.dev.dependencies]
-pytest = "^8.3.1"
-pytest-html = "^4.1.1"
-pytest-clarity = "^1.0.1"
-yapf = "^0.40.2"
-
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["pdm-backend"]
+build-backend = "pdm.backend"
 
-[tool.poetry.scripts]
+[project]
+name = "ptx-formatter"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Haris Skiadas", email = "cskiadas@gmail.com"},
+    {name = "Barb Wahl", email = "barb.wahl.1960@gmail.com"},
+]
+dependencies = [
+    "typer[all]<1.0.0,>=0.12.3",
+]
+requires-python = "<4.0,>=3.12"
+readme = "README.md"
+license = {text = "MIT"}
+
+[project.scripts]
 ptx-format = "ptx_formatter:main"
+
+[tool.pdm]
+distribution = true
+
+[tool.pdm.dev-dependencies]
+dev = [
+    "pytest<9.0.0,>=8.3.1",
+    "pytest-html<5.0.0,>=4.1.1",
+    "pytest-clarity<2.0.0,>=1.0.1",
+    "yapf<1.0.0,>=0.40.2",
+]
+
+[tool.pdm.build]
+includes = ["ptx_formatter/"]
+
+[tool.pdm.scripts]
+test = "pytest"
+lint.cmd = "yapf -ri ptx_formatter tests"
+lint.help = "lint in-place"
+lint-diff.cmd = "yapf -rd ptx_formatter tests"
+lint-diff.help = "error if lint produces diffs"
 
 [tool.yapf]
 based_on_style = "google"

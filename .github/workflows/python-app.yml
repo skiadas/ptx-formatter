@@ -19,29 +19,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v3
+    - name: Setup PDM
+      uses: pdm-project/setup-pdm@v4
       with:
         python-version: "3.12"
-    - name: Install poetry
-      uses: abatilo/actions-poetry@v2
-      with:
-        poetry-version: "1.8.3"
-    - name: Setup a local virtual environment
-      run: |
-        poetry config virtualenvs.create true --local
-        poetry config virtualenvs.in-project true --local
-    - uses: actions/cache@v3
-      name: Cache virtual environment based on dependencies lock file
-      with:
-        path: ./.venv
-        key: venv-${{ hashFiles('poetry.lock') }}
+        cache: true
+      # You are now able to use PDM in your workflow
     - name: Install dependencies
-      run: |
-        poetry install
-    - name: Lint with yapf
-      run: |
-        poetry run yapf --recursive --diff ptx_formatter tests
+      run: pdm install
+    - name: Lint and error if needed
+      run: pdm run lint-diff
     - name: Run tests
-      run: |
-        poetry run pytest
+      run: pdm run test
