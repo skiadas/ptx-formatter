@@ -1,3 +1,3 @@
-from ptx_formatter import app
+from ptx_formatter.cli import app
 
-app(prog_name="ptx-format")
+app()

@@ -21,7 +21,7 @@ readme = "README.md"
 license = {text = "MIT"}
 
 [project.scripts]
-ptx-format = "ptx_formatter:main"
+ptx-format = "ptx_formatter.cli:app"
 
 [tool.pdm]
 distribution = true
