@@ -6,10 +6,14 @@ from enum import Enum
 from ptx_formatter.tags import docEnvs, docSecs, docStructure, lineEndTags, math_display, nestable_tags, verbatimTags
 
 
-class BlankLines(str, Enum):
+class BlankLines(Enum):
+  """Enum representing the number of blank lines to be created."""
   few = "few"
+  """Few blank lines are created."""
   some = "some"
+  """Blank lines are introduced more liberally."""
   many = "many"
+  """Blank lines are introduced very liberally."""
 
 
 RE_OPEN_TAG = re.compile(r"^<(\w\S*?)(\s.*?|>)$")
@@ -57,34 +61,49 @@ def joinLines(fullText: str) -> str:
 
 
 def formatPretext(
-    allText: str,
+    text: str,
     breakSentences=False,
     blankLines=BlankLines.few,
     addDocumentIdentifier=False,
     indent="  ",
 ) -> str:
+  """Format the provided pretext source code to a standard format.
+
+  Args:
+    text (str): the text to be formatted
+    breakSentences (bool): Whether to create new lines at the end of each
+                    text sentence. (default: False)
+    blankLines (BlankLines): How frequently to use blank lines. Can be any
+                    `BlankLines` enum value. (default: :obj:`BlankLines.few`)
+    addDocumentIdentifier (bool): Whether to introduce an `<?xml ...?>` segment
+                           at the start if one is not present. (default False)
+    indent (str): string to use for indentation. (default to two spaces)
+
+  Returns:
+    str: The formatted text string
+  """
   # First clean up document so that each line is a single tag when appropriate.
-  allText = joinLines(allText)
+  text = joinLines(text)
   for btag in blockTags:
-    if ("<" + btag) in allText:
+    if ("<" + btag) in text:
       # start tag can be <tag>, <tag attr="val">, or <tag xmlns="..."> but shouldn't
       # be self closing (no self closing tag would have xmlns in it)
       startTag = re.compile("<" + btag + "(>|([^/]*?)>|(.*xmlns.*?)>)")
       endTag = re.compile("</" + btag + ">")
-      allText = startTag.sub(r"\n\g<0>\n", allText)
-      allText = endTag.sub(r"\n\g<0>\n", allText)
+      text = startTag.sub(r"\n\g<0>\n", text)
+      text = endTag.sub(r"\n\g<0>\n", text)
 
   for tag in lineEndTags:
     startTag = re.compile("<" + tag + r"(\s.*?)?>")
     endTag = re.compile("</" + tag + ">")
     selfCloseTag = re.compile("<" + tag + r"(\s.*?)?/>")
-    allText = startTag.sub(r"\n\g<0>", allText)
-    allText = endTag.sub(r"\g<0>\n", allText)
-    allText = selfCloseTag.sub(r"\g<0>\n", allText)
+    text = startTag.sub(r"\n\g<0>", text)
+    text = endTag.sub(r"\g<0>\n", text)
+    text = selfCloseTag.sub(r"\g<0>\n", text)
 
   level = 0
   verbatim = False
-  lines = allText.splitlines()
+  lines = text.splitlines()
   fixedLines = []
   for line in lines:
     trimmedLine = line.strip()
