@@ -32,6 +32,7 @@ dev = [
     "pytest-html<5.0.0,>=4.1.1",
     "pytest-clarity<2.0.0,>=1.0.1",
     "yapf<1.0.0,>=0.40.2",
+    "pdoc>=14.6.0",
 ]
 
 [tool.pdm.build]
@@ -43,6 +44,8 @@ lint.cmd = "yapf -ri ptx_formatter tests"
 lint.help = "lint in-place"
 lint-diff.cmd = "yapf -rd ptx_formatter tests"
 lint-diff.help = "error if lint produces diffs"
+doc = "pdoc -n -d google -o docs --no-include-undocumented ptx_formatter"
+doc-serve = "pdoc -n -d google  --no-include-undocumented ptx_formatter"
 
 [tool.yapf]
 based_on_style = "google"
