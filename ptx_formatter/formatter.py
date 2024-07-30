@@ -38,7 +38,6 @@ def joinLines(fullText: str) -> str:
       # This line starts a verbatim block.
       # Add it to the array of lines and set verbatim to true.
       joinedLines.append(line)
-      print(openTagMatch[1])
       verbatim = True
     elif closeTagMatch and closeTagMatch[1] in verbatimTags:
       # This line ends a verbatim block.
