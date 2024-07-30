@@ -22,7 +22,21 @@ fixedExpressions = [
 <p>Another paragraph</p>""", """<p>
 <ul>
 </ul>
-</p>"""
+</p>""",
+"""<program>
+  <pre>Pre stuff
+  Indent being respected
+  </pre>
+  <input>code here
+
+  must preserve Indenting
+  </input>
+  <tests>
+Tests here
+
+  must also preserve
+  </tests>
+</program>"""
 ]
 
 

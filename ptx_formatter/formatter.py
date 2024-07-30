@@ -16,8 +16,8 @@ class BlankLines(Enum):
   """Blank lines are introduced very liberally."""
 
 
-RE_OPEN_TAG = re.compile(r"^<(\w\S*?)(\s.*?|>)$")
-RE_CLOSE_TAG = re.compile(r"^</(\w\S*?)(\s.*?|>)$")
+RE_OPEN_TAG = re.compile(r"^<(\w\S*?)(\s.*?|>)")
+RE_CLOSE_TAG = re.compile(r"^</(\w\S*?)(\s.*?|>)")
 
 newlineTags = docStructure + docSecs + docEnvs + nestable_tags + ["xi:include"]
 
@@ -38,6 +38,7 @@ def joinLines(fullText: str) -> str:
       # This line starts a verbatim block.
       # Add it to the array of lines and set verbatim to true.
       joinedLines.append(line)
+      print(openTagMatch[1])
       verbatim = True
     elif closeTagMatch and closeTagMatch[1] in verbatimTags:
       # This line ends a verbatim block.
