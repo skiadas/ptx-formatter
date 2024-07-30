@@ -22,8 +22,7 @@ fixedExpressions = [
 <p>Another paragraph</p>""", """<p>
 <ul>
 </ul>
-</p>""",
-"""<program>
+</p>""", """<program>
   <pre>Pre stuff
   Indent being respected
   </pre>
