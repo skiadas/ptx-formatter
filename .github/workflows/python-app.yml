@@ -31,3 +31,5 @@ jobs:
       run: pdm run lint-diff
     - name: Run tests
       run: pdm run test
+    - name: Build
+      run: pdm build
