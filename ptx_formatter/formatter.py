@@ -27,10 +27,9 @@ blockTags = docStructure + docSecs + docEnvs + nestable_tags + math_display
 def joinLines(fullText: str) -> str:
   verbatim = False
   lines = fullText.splitlines()
-  # Start by adding the first two lines of the document.
-  joinedLines = lines[0:1]
+  joinedLines = []
   # Iterate through lines, joining lines when not in a verbatim block.
-  for line in lines[1:]:
+  for line in lines:
     # look for tags in a line
     openTagMatch = RE_OPEN_TAG.search(line.strip())
     closeTagMatch = RE_CLOSE_TAG.search(line.strip())
@@ -51,7 +50,7 @@ def joinLines(fullText: str) -> str:
     else:
       # We are not inside a verbatim block.
       # Concatenate the line to the previous line in joinedLines
-      lastLine = joinedLines.pop()
+      lastLine = joinedLines.pop() if joinedLines != [] else None
       if lastLine:
         joinedLines.append(lastLine.strip() + " " + line.strip())
       else:
