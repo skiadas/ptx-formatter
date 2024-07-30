@@ -24,7 +24,10 @@ TODO: Figure out how to make autocompletion work
 
 ### As a Python library
 
-TODO
+You can use the ptx formatter in other Python code by adding the package as a dependency with your favorite package manager. Then in your code you can do:
+```python
+from ptx_formatter import formatPretext
+```
 
 ### From command line
 
