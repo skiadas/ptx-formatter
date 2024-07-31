@@ -2,6 +2,7 @@ import unittest
 
 from os.path import dirname, join
 from ptx_formatter.formatter import formatPretext
+from ptx_formatter.utils.config import Config
 
 # Turn this on if you want result files produced
 # for manual comparison
@@ -13,15 +14,18 @@ sampleFiles = ["fewNewlines.ptx",
 fixedExpressions = [
     """<premise>
   <p>A paragraph</p>
-</premise>""", """<premise>
+</premise>""", """<section>
+  <premise>
+    <p>A paragraph</p>
+  </premise>
+  <response>
+    <p>Another paragraph</p>
+  </response>
+</section>""", """<block>
   <p>A paragraph</p>
-</premise>
-<response>
   <p>Another paragraph</p>
-</response>""", """<p>A paragraph</p>
-<p>Another paragraph</p>""", """<p>
-<ul>
-</ul>
+</block>""", """<p>
+  <ul></ul>
 </p>""", """<program>
   <pre>Pre stuff
   Indent being respected
@@ -58,5 +62,7 @@ class TestPtxFormatter(unittest.TestCase):
 
   def test_formatter_keeps_expression_same(self):
     self.maxDiff = None
+    config = Config.standard()
+    config.set_add_doc_id(False)
     for expr in fixedExpressions:
-      self.assertEqual(formatPretext(expr), expr)
+      self.assertEqual(formatPretext(expr, config), expr)

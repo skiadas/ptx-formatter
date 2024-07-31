@@ -36,12 +36,8 @@
       </statement>
       <matches>
         <match order="1">
-          <premise>
-            The number 5
-          </premise>
-          <response>
-            An odd number
-          </response>
+          <premise>The number 5</premise>
+          <response>An odd number</response>
         </match>
         <match order="2">
           <premise>
@@ -52,12 +48,8 @@
           </response>
         </match>
         <match order="3">
-          <premise>
-            Favorite color
-          </premise>
-          <response>
-            Blue
-          </response>
+          <premise>Favorite color</premise>
+          <response>Blue</response>
         </match>
       </matches>
     </exercise>

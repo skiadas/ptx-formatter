@@ -4,7 +4,7 @@ import sys
 
 import typer
 
-from ptx_formatter.formatter import formatPretext, BlankLines
+from ptx_formatter.formatter import formatPretext, Config
 
 __version__ = "0.0.1"
 
@@ -49,47 +49,48 @@ def mainPtx(
         ),
     ] = None,
     indent: Annotated[
-        int,
+        Optional[int],
         typer.Option(
             "--indent",
             "-i",
             help=
-            "Number of characters for space-indent (default 2). Ignored if tab_indent is set.",
+            "Number of characters for space-indent. Overwrites the standard configuration. Ignored if tab_indent is set.",
             show_default=False,
         ),
-    ] = 2,
+    ] = None,
     tabIndent: Annotated[
-        bool,
-        typer.Option("--tab-indent", "-t", help="Indent using tabs instead."
-                    )] = False,
+        Optional[bool],
+        typer.Option("--tab-indent", "-t", help="Indent using tabs instead. Overwrites the standard configuration."
+                    )] = None,
     version: Annotated[
         bool,
         typer.Option("--version", callback=version_callback, is_eager=True
                     )] = None,
-    blankLines: Annotated[
-        BlankLines,
+    configFile: Annotated[
+        Optional[typer.FileText],
         typer.Option(
-            "--blank-lines",
-            help="How many blank lines to have at the final document.",
+            "--config-file",
+            "-c",
+            help=
+            "File to use as configuration. If omitted, a standard configuration file is loaded.",
             show_default=False,
-        )] = BlankLines.few,
-    breakSentences: Annotated[
-        bool,
-        typer.Option(
-            "--break-sentences",
-            help="If set, a newline will be formed at the end of each sentence.",
-            show_default=False)] = False):
+        ),
+    ] = None,
+    showConfig: Annotated[
+      bool,
+      typer.Option("--show-config", help="Print the current configuration and exit. This is in a TOML form that could be saved to a file and used as a start file.")
+    ] = False):
   """
   Reformats a PreText XML document to follow a standard format.
   """
-  inputString = (inputFile or sys.stdin).read()
   if addDocId is None:
     addDocId = outputFile is not None
-  result = formatPretext(inputString,
-                         breakSentences=breakSentences,
-                         blankLines=blankLines,
-                         addDocumentIdentifier=addDocId,
-                         indent="\t" if tabIndent else " " * indent)
+  config = assemble_config(configFile, tabIndent, indent, addDocId)
+  if showConfig:
+    sys.stdout.write(config.print())
+    raise typer.Exit()
+  inputString = (inputFile or sys.stdin).read()
+  result = formatPretext(inputString, config)
   (outputFile or sys.stdout).write(result)
 
 
@@ -97,27 +98,20 @@ def main():
   app()
 
 
+def assemble_config(configFile, indent: int | None, tabIndent: bool | None,
+                    addDocId: bool) -> Config:
+  if configFile is not None:
+    config = Config.fromFile(configFile)
+  else:
+    config = Config.standard()
+
+  config.set_add_doc_id(addDocId)
+
+  if tabIndent is not None:
+    config.set_indent("\t")
+  elif indent is not None:
+    config.set_indent(indent)
+  return config
+
 if __name__ == "__main__":
   main()
-
-# app = typer.Typer()
-
-# @app.callback()
-# def callback():
-#     """
-#     Awesome Portal Gun
-#     """
-
-# @app.command()
-# def shoot():
-#     """
-#     Shoot the portal gun
-#     """
-#     typer.echo("Shooting portal gun")
-
-# @app.command()
-# def load():
-#     """
-#     Load the portal gun
-#     """
-#     typer.echo("Loading portal gun")

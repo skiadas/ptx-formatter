@@ -1,0 +1,10 @@
+indent = 2
+include-doc-id = true
+
+[tags]
+verbatim = ["pre", "input", "tests"]
+block = ["ul", "ol", "chapter", "section"]
+block-no-indent = []
+inline = ["span", "em", "q", "c"]
+inline-empty = ["var"]
+
