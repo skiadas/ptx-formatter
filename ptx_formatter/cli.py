@@ -1,12 +1,10 @@
 from typing import Annotated, Optional
-from pathlib import Path
-import sys
 
+import sys
 import typer
 
 from ptx_formatter.formatter import formatPretext, Config
-
-__version__ = "0.0.1"
+from ptx_formatter.version import __version__
 
 
 def version_callback(value: bool):
@@ -60,8 +58,12 @@ def mainPtx(
     ] = None,
     tabIndent: Annotated[
         Optional[bool],
-        typer.Option("--tab-indent", "-t", help="Indent using tabs instead. Overwrites the standard configuration."
-                    )] = None,
+        typer.Option(
+            "--tab-indent",
+            "-t",
+            help=
+            "Indent using tabs instead. Overwrites the standard configuration."
+        )] = None,
     version: Annotated[
         bool,
         typer.Option("--version", callback=version_callback, is_eager=True
@@ -77,9 +79,12 @@ def mainPtx(
         ),
     ] = None,
     showConfig: Annotated[
-      bool,
-      typer.Option("--show-config", help="Print the current configuration and exit. This is in a TOML form that could be saved to a file and used as a start file.")
-    ] = False):
+        bool,
+        typer.Option(
+            "--show-config",
+            help=
+            "Print the current configuration and exit. This is in a TOML form that could be saved to a file and used as a start file."
+        )] = False):
   """
   Reformats a PreText XML document to follow a standard format.
   """
@@ -112,6 +117,7 @@ def assemble_config(configFile, indent: int | None, tabIndent: bool | None,
   elif indent is not None:
     config.set_indent(indent)
   return config
+
 
 if __name__ == "__main__":
   main()

@@ -7,7 +7,7 @@ build-backend = "pdm.backend"
 
 [project]
 name = "ptx-formatter"
-version = "0.1.0"
+dynamic = ["version"]
 description = ""
 authors = [
     {name = "Haris Skiadas", email = "cskiadas@gmail.com"},
@@ -28,6 +28,10 @@ ptx-format = "ptx_formatter.cli:app"
 
 [tool.pdm]
 distribution = true
+
+[tool.pdm.version]
+source = "file"
+path = "ptx_formatter/version.py"
 
 [tool.pdm.dev-dependencies]
 dev = [
