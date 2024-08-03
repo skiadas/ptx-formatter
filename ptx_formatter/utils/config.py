@@ -81,7 +81,7 @@ class Config:
     tags.add("block", self._make_array(Preference.Block))
     tags.add(
         tomlkit.comment(
-            "block-no-indent tags will increase the indent of their contents."))
+            "block-no-indent tags will not increase the indent of their contents."))
     tags.add("block-no-indent", self._make_array(Preference.BlockNoIndent))
     return tomlkit.dumps(doc)
 
