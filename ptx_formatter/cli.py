@@ -13,7 +13,7 @@ def version_callback(value: bool):
     raise typer.Exit()
 
 
-app = typer.Typer()
+app = typer.Typer(add_completion=False)
 
 
 @app.command()
@@ -64,10 +64,6 @@ def mainPtx(
             help=
             "Indent using tabs instead. Overwrites the standard configuration."
         )] = None,
-    version: Annotated[
-        bool,
-        typer.Option("--version", callback=version_callback, is_eager=True
-                    )] = None,
     configFile: Annotated[
         Optional[typer.FileText],
         typer.Option(
@@ -84,7 +80,13 @@ def mainPtx(
             "--show-config",
             help=
             "Print the current configuration and exit. This is in a TOML form that could be saved to a file and used as a start file."
-        )] = False):
+        )] = False,
+    version: Annotated[bool,
+                       typer.Option("--version",
+                                    callback=version_callback,
+                                    help="Print the version and exit.",
+                                    is_eager=True)] = None,
+):
   """
   Reformats a PreText XML document to follow a standard format.
   """
