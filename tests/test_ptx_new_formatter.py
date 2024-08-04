@@ -8,8 +8,7 @@ from ptx_formatter.utils.config import Config
 # for manual comparison
 WRITE_RESULT_FILES = False
 
-sampleFiles = ["fewNewlines.ptx",
-               "fewWithListing.ptx"]
+sampleFiles = ["fewNewlines.ptx", "fewWithListing.ptx"]
 
 fixedExpressions = [
     """<premise>
