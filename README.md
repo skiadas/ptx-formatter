@@ -1,6 +1,6 @@
 # PtxFormatter
 
-PtxFormatter is a formatter for PreText, based on a translation of the code in the [https://github.com/oscarlevin/pretext-tools](PreText-tools) VSCode extension.
+PtxFormatter is an opinionated but customizable formatter for PreText. It can be used as a command-line tool or as a Python library.
 
 ## Installation
 
@@ -10,15 +10,13 @@ A wheel and tarball are available. You can install them with:
 pip install --user path_to_wheel
 ```
 
-TODO: pipx
+TODO: Add pipx instructions
 
 You should now have a command ready to use:
 ```shell
 ptx-format --version
 ptx-format --help
 ```
-
-TODO: Figure out how to make autocompletion work
 
 ## Usage
 
@@ -28,6 +26,7 @@ You can use the ptx formatter in other Python code by adding the package as a de
 ```python
 from ptx_formatter import formatPretext
 ```
+See the documentation pages for details.
 
 ### From command line
 
@@ -42,10 +41,15 @@ ptx-format -f inputFile.ptx -o outputFile.ptx
 
 The command allows a number of options. See also `ptx-format --help`.
 
-- `--indent n` or `-i n` sets the amount of indent to the specified number `n`. The default is 2.
-- `--tab-indent` or `-t` switches to using tabs for indentation. The default is to use spaces.
-- `--file filename` or `-f filename` sets the input to be from the provided filename. If omitted, standard input is used.
-- `--output filename` or `-o filename` sets the output to be to the provided filename. If omitted, standard output is used.
-- `--blank-lines ...` specifies how many blank lines should be created. Allowed values are `few` (the default), `some` or `many`.
-- `--break-sentences` will introduce newlines at the end of each sentence.
-- `--add-doc-type` or `--skip-doc-type` are used to overwrite the default behavior regarding the initial `<?xml ...` document identifier. These settings only make a difference if the source document does not contain the identifier. The default behavior depends on the output file settings. If an output file is specified via `--output` or `-o`, then a doc identifier will be inserted if it was not present. If the output is to standard out instead, then a doc identifier will not be added if not already present.
+#### Options
+
+* `--add-doc-type / --skip-doc-type`: Whether to include or skip the XML doc identifier <?xml ...>. The identifier will by default be added if the output is a file and skipped if the output is stdout.
+* `-f, --file FILENAME`: File to use as input. If omitted, read the contents of standard input.
+* `-o, --output FILENAME`: File to use as output. If omitted, write the results to standard output.
+* `-i, --indent INTEGER`: Number of characters for space-indent. Overwrites the standard configuration. Ignored if tab_indent is set.
+* `-t, --tab-indent`: Indent using tabs instead. Overwrites the standard configuration.
+* `-c, --config-file FILENAME`: File to use as configuration. If omitted, a standard configuration file is loaded.
+* `--show-config`: Print the current configuration and exit. This is in a TOML form that could be saved to a file and used as a start file.
+* `--version`: Print the version and exit.
+* `--help`: Show this message and exit.
+
