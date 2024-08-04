@@ -88,14 +88,19 @@ ptx_formatter    </h1>
 
 <h2 id="installation">Installation</h2>
 
-<p>A wheel and tarball are available. You can install them with:</p>
+<p>Easiest way to get started is to grab the newest version with <a href="https://pipx.pypa.io/stable/">pipx</a>:</p>
 
 <div class="pdoc-code codehilite">
-<pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>path_to_wheel
+<pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span>--fetch-missing-python<span class="w"> </span>git+https://github.com/skiadas/ptx-formatter.git
 </code></pre>
 </div>
 
-<p>TODO: Add pipx instructions</p>
+<p>Or grab a wheel URL from our <a href="https://github.com/skiadas/ptx-formatter/releases">releases page</a> and use that instead:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code>pipx<span class="w"> </span>install<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.12<span class="w"> </span>--fetch-missing-python<span class="w"> </span>https://github.com/skiadas/ptx-formatter/releases/download/v0.0.2b/ptx_formatter-0.0.2-py3-none-any.whl
+</code></pre>
+</div>
 
 <p>You should now have a command ready to use:</p>
 
@@ -104,6 +109,15 @@ ptx_formatter    </h1>
 ptx-format<span class="w"> </span>--help
 </code></pre>
 </div>
+
+<p>For alternative installations, wheels and tarballs are available from the <a href="https://github.com/skiadas/ptx-formatter/releases">releases page</a>. You can install them for example with:</p>
+
+<div class="pdoc-code codehilite">
+<pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>--user<span class="w"> </span>url_to_wheel
+</code></pre>
+</div>
+
+<p>You will need to be running Python 3.12 or newer, and will need to add the dependencies.</p>
 
 <h2 id="command-line-usage">Command line Usage</h2>
 
@@ -190,87 +204,96 @@ mode but that don't increase the indent level for their contents.</li>
 </span><span id="L-5"><a href="#L-5"><span class="linenos"> 5</span></a>
 </span><span id="L-6"><a href="#L-6"><span class="linenos"> 6</span></a><span class="sd">## Installation</span>
 </span><span id="L-7"><a href="#L-7"><span class="linenos"> 7</span></a>
-</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="sd">A wheel and tarball are available. You can install them with:</span>
+</span><span id="L-8"><a href="#L-8"><span class="linenos"> 8</span></a><span class="sd">Easiest way to get started is to grab the newest version with [pipx](https://pipx.pypa.io/stable/):</span>
 </span><span id="L-9"><a href="#L-9"><span class="linenos"> 9</span></a>
 </span><span id="L-10"><a href="#L-10"><span class="linenos">10</span></a><span class="sd">```shell</span>
-</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">pip install --user path_to_wheel</span>
+</span><span id="L-11"><a href="#L-11"><span class="linenos">11</span></a><span class="sd">pipx install --python 3.12 --fetch-missing-python git+https://github.com/skiadas/ptx-formatter.git</span>
 </span><span id="L-12"><a href="#L-12"><span class="linenos">12</span></a><span class="sd">```</span>
-</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a>
-</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">TODO: Add pipx instructions</span>
-</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a>
-</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">You should now have a command ready to use:</span>
-</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a><span class="sd">```shell</span>
-</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">ptx-format --version</span>
-</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="sd">ptx-format --help</span>
-</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="sd">```</span>
-</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a>
-</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="sd">## Command line Usage</span>
+</span><span id="L-13"><a href="#L-13"><span class="linenos">13</span></a><span class="sd">Or grab a wheel URL from our [releases page](https://github.com/skiadas/ptx-formatter/releases) and use that instead:</span>
+</span><span id="L-14"><a href="#L-14"><span class="linenos">14</span></a><span class="sd">```shell</span>
+</span><span id="L-15"><a href="#L-15"><span class="linenos">15</span></a><span class="sd">pipx install --python 3.12 --fetch-missing-python https://github.com/skiadas/ptx-formatter/releases/download/v0.0.2b/ptx_formatter-0.0.2-py3-none-any.whl</span>
+</span><span id="L-16"><a href="#L-16"><span class="linenos">16</span></a><span class="sd">```</span>
+</span><span id="L-17"><a href="#L-17"><span class="linenos">17</span></a>
+</span><span id="L-18"><a href="#L-18"><span class="linenos">18</span></a><span class="sd">You should now have a command ready to use:</span>
+</span><span id="L-19"><a href="#L-19"><span class="linenos">19</span></a><span class="sd">```shell</span>
+</span><span id="L-20"><a href="#L-20"><span class="linenos">20</span></a><span class="sd">ptx-format --version</span>
+</span><span id="L-21"><a href="#L-21"><span class="linenos">21</span></a><span class="sd">ptx-format --help</span>
+</span><span id="L-22"><a href="#L-22"><span class="linenos">22</span></a><span class="sd">```</span>
 </span><span id="L-23"><a href="#L-23"><span class="linenos">23</span></a>
-</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="sd">You can use `ptx-format` with standard input and output, like so:</span>
-</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a><span class="sd">```shell</span>
-</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="sd">ptx-format &lt; inputFile.ptx   &gt; outputFile.ptx</span>
-</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="sd">```</span>
-</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="sd">You can also specify one or both files as arguments:</span>
-</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="sd">```shell</span>
-</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a><span class="sd">ptx-format -f inputFile.ptx -o outputFile.ptx</span>
-</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="sd">```</span>
+</span><span id="L-24"><a href="#L-24"><span class="linenos">24</span></a><span class="sd">For alternative installations, wheels and tarballs are available from the [releases page](https://github.com/skiadas/ptx-formatter/releases). You can install them for example with:</span>
+</span><span id="L-25"><a href="#L-25"><span class="linenos">25</span></a>
+</span><span id="L-26"><a href="#L-26"><span class="linenos">26</span></a><span class="sd">```shell</span>
+</span><span id="L-27"><a href="#L-27"><span class="linenos">27</span></a><span class="sd">pip install --user url_to_wheel</span>
+</span><span id="L-28"><a href="#L-28"><span class="linenos">28</span></a><span class="sd">```</span>
+</span><span id="L-29"><a href="#L-29"><span class="linenos">29</span></a><span class="sd">You will need to be running Python 3.12 or newer, and will need to add the dependencies.</span>
+</span><span id="L-30"><a href="#L-30"><span class="linenos">30</span></a>
+</span><span id="L-31"><a href="#L-31"><span class="linenos">31</span></a><span class="sd">## Command line Usage</span>
 </span><span id="L-32"><a href="#L-32"><span class="linenos">32</span></a>
-</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="sd">The command allows a number of options. See also `ptx-format --help`.</span>
-</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a>
-</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="sd">### Options</span>
-</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a>
-</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="sd">* `--add-doc-type / --skip-doc-type`: Whether to include or skip the XML doc identifier &lt;?xml ...&gt;. The identifier will by default be added if the output is a file and skipped if the output is stdout.</span>
-</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a><span class="sd">* `-f, --file FILENAME`: File to use as input. If omitted, read the contents of standard input.</span>
-</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a><span class="sd">* `-o, --output FILENAME`: File to use as output. If omitted, write the results to standard output.</span>
-</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="sd">* `-i, --indent INTEGER`: Number of characters for space-indent. Overwrites the standard configuration. Ignored if tab_indent is set.</span>
-</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a><span class="sd">* `-t, --tab-indent`: Indent using tabs instead. Overwrites the standard configuration.</span>
-</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a><span class="sd">* `-c, --config-file FILENAME`: File to use as configuration. If omitted, a standard configuration file is loaded.</span>
-</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a><span class="sd">* `--show-config`: Print the current configuration and exit. This is in a TOML form that could be saved to a file and used as a start file.</span>
-</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="sd">* `--version`: Print the version and exit.</span>
-</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a><span class="sd">* `--help`: Show this message and exit.</span>
-</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a>
-</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a>
-</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a><span class="sd">## Basic API usage</span>
-</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a>
-</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a><span class="sd">You simply need to import `formatPretext` and provide it with a</span>
-</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a><span class="sd">the source string. It returns the formatted string.</span>
-</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a>
-</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a><span class="sd">```python</span>
-</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a><span class="sd">from ptx_formatter import formatPretext</span>
+</span><span id="L-33"><a href="#L-33"><span class="linenos">33</span></a><span class="sd">You can use `ptx-format` with standard input and output, like so:</span>
+</span><span id="L-34"><a href="#L-34"><span class="linenos">34</span></a><span class="sd">```shell</span>
+</span><span id="L-35"><a href="#L-35"><span class="linenos">35</span></a><span class="sd">ptx-format &lt; inputFile.ptx   &gt; outputFile.ptx</span>
+</span><span id="L-36"><a href="#L-36"><span class="linenos">36</span></a><span class="sd">```</span>
+</span><span id="L-37"><a href="#L-37"><span class="linenos">37</span></a><span class="sd">You can also specify one or both files as arguments:</span>
+</span><span id="L-38"><a href="#L-38"><span class="linenos">38</span></a><span class="sd">```shell</span>
+</span><span id="L-39"><a href="#L-39"><span class="linenos">39</span></a><span class="sd">ptx-format -f inputFile.ptx -o outputFile.ptx</span>
+</span><span id="L-40"><a href="#L-40"><span class="linenos">40</span></a><span class="sd">```</span>
+</span><span id="L-41"><a href="#L-41"><span class="linenos">41</span></a>
+</span><span id="L-42"><a href="#L-42"><span class="linenos">42</span></a><span class="sd">The command allows a number of options. See also `ptx-format --help`.</span>
+</span><span id="L-43"><a href="#L-43"><span class="linenos">43</span></a>
+</span><span id="L-44"><a href="#L-44"><span class="linenos">44</span></a><span class="sd">### Options</span>
+</span><span id="L-45"><a href="#L-45"><span class="linenos">45</span></a>
+</span><span id="L-46"><a href="#L-46"><span class="linenos">46</span></a><span class="sd">* `--add-doc-type / --skip-doc-type`: Whether to include or skip the XML doc identifier &lt;?xml ...&gt;. The identifier will by default be added if the output is a file and skipped if the output is stdout.</span>
+</span><span id="L-47"><a href="#L-47"><span class="linenos">47</span></a><span class="sd">* `-f, --file FILENAME`: File to use as input. If omitted, read the contents of standard input.</span>
+</span><span id="L-48"><a href="#L-48"><span class="linenos">48</span></a><span class="sd">* `-o, --output FILENAME`: File to use as output. If omitted, write the results to standard output.</span>
+</span><span id="L-49"><a href="#L-49"><span class="linenos">49</span></a><span class="sd">* `-i, --indent INTEGER`: Number of characters for space-indent. Overwrites the standard configuration. Ignored if tab_indent is set.</span>
+</span><span id="L-50"><a href="#L-50"><span class="linenos">50</span></a><span class="sd">* `-t, --tab-indent`: Indent using tabs instead. Overwrites the standard configuration.</span>
+</span><span id="L-51"><a href="#L-51"><span class="linenos">51</span></a><span class="sd">* `-c, --config-file FILENAME`: File to use as configuration. If omitted, a standard configuration file is loaded.</span>
+</span><span id="L-52"><a href="#L-52"><span class="linenos">52</span></a><span class="sd">* `--show-config`: Print the current configuration and exit. This is in a TOML form that could be saved to a file and used as a start file.</span>
+</span><span id="L-53"><a href="#L-53"><span class="linenos">53</span></a><span class="sd">* `--version`: Print the version and exit.</span>
+</span><span id="L-54"><a href="#L-54"><span class="linenos">54</span></a><span class="sd">* `--help`: Show this message and exit.</span>
 </span><span id="L-55"><a href="#L-55"><span class="linenos">55</span></a>
-</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a><span class="sd">s = formatPretext(source)</span>
-</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a><span class="sd">print(s)</span>
-</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a><span class="sd">```</span>
-</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a>
-</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a><span class="sd">### API Configuration</span>
+</span><span id="L-56"><a href="#L-56"><span class="linenos">56</span></a>
+</span><span id="L-57"><a href="#L-57"><span class="linenos">57</span></a><span class="sd">## Basic API usage</span>
+</span><span id="L-58"><a href="#L-58"><span class="linenos">58</span></a>
+</span><span id="L-59"><a href="#L-59"><span class="linenos">59</span></a><span class="sd">You simply need to import `formatPretext` and provide it with a</span>
+</span><span id="L-60"><a href="#L-60"><span class="linenos">60</span></a><span class="sd">the source string. It returns the formatted string.</span>
 </span><span id="L-61"><a href="#L-61"><span class="linenos">61</span></a>
-</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a><span class="sd">You can customize the output further by providing a `Config`</span>
-</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a><span class="sd">object, likely created by calling the `Config.fromFile` method.</span>
+</span><span id="L-62"><a href="#L-62"><span class="linenos">62</span></a><span class="sd">```python</span>
+</span><span id="L-63"><a href="#L-63"><span class="linenos">63</span></a><span class="sd">from ptx_formatter import formatPretext</span>
 </span><span id="L-64"><a href="#L-64"><span class="linenos">64</span></a>
-</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a><span class="sd">Configurations can be stored to and loaded from [TOML](https://toml.io/en/)</span>
-</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a><span class="sd">format files. An example file is produced by the `Config.print` function.</span>
-</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a>
-</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a><span class="sd">The following entries are expected/allowed:</span>
-</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a>
-</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a><span class="sd">- `indent`, with value a number of spaces or a string to use for indent</span>
-</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a><span class="sd">- `include-doc-id`, a boolean to specify whether the document</span>
-</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a><span class="sd">  identifier should be included or not</span>
-</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a><span class="sd">- `tags`, a table whose entry keys are specific tag classifications</span>
-</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a><span class="sd">  (see just below) and whose values are arrays of the tags belonging</span>
-</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a><span class="sd">  to that classification. Only tags that need to be handled in a certain</span>
-</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a><span class="sd">  way need to be included. The allowed classifications are:</span>
-</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a><span class="sd">  - `verbatim` for tags whose contents are to be rendered verbatim</span>
-</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a><span class="sd">  - `inline` for tags that are to be inlined</span>
-</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a><span class="sd">  - `inline-empty` for tags that are to be inline only when empty</span>
-</span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a><span class="sd">  - `block` for tags that are to be rendered in block mode</span>
-</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a><span class="sd">  - `block-no-indent` for tags that are to be rendered in block</span>
-</span><span id="L-82"><a href="#L-82"><span class="linenos">82</span></a><span class="sd">    mode but that don&#39;t increase the indent level for their contents.</span>
-</span><span id="L-83"><a href="#L-83"><span class="linenos">83</span></a>
-</span><span id="L-84"><a href="#L-84"><span class="linenos">84</span></a><span class="sd">&quot;&quot;&quot;</span>
-</span><span id="L-85"><a href="#L-85"><span class="linenos">85</span></a>
-</span><span id="L-86"><a href="#L-86"><span class="linenos">86</span></a><span class="kn">from</span> <span class="nn">ptx_formatter.formatter</span> <span class="kn">import</span> <span class="n">formatPretext</span><span class="p">,</span> <span class="n">Config</span>
-</span><span id="L-87"><a href="#L-87"><span class="linenos">87</span></a>
-</span><span id="L-88"><a href="#L-88"><span class="linenos">88</span></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="n">formatPretext</span><span class="p">,</span> <span class="n">Config</span><span class="p">]</span>
+</span><span id="L-65"><a href="#L-65"><span class="linenos">65</span></a><span class="sd">s = formatPretext(source)</span>
+</span><span id="L-66"><a href="#L-66"><span class="linenos">66</span></a><span class="sd">print(s)</span>
+</span><span id="L-67"><a href="#L-67"><span class="linenos">67</span></a><span class="sd">```</span>
+</span><span id="L-68"><a href="#L-68"><span class="linenos">68</span></a>
+</span><span id="L-69"><a href="#L-69"><span class="linenos">69</span></a><span class="sd">### API Configuration</span>
+</span><span id="L-70"><a href="#L-70"><span class="linenos">70</span></a>
+</span><span id="L-71"><a href="#L-71"><span class="linenos">71</span></a><span class="sd">You can customize the output further by providing a `Config`</span>
+</span><span id="L-72"><a href="#L-72"><span class="linenos">72</span></a><span class="sd">object, likely created by calling the `Config.fromFile` method.</span>
+</span><span id="L-73"><a href="#L-73"><span class="linenos">73</span></a>
+</span><span id="L-74"><a href="#L-74"><span class="linenos">74</span></a><span class="sd">Configurations can be stored to and loaded from [TOML](https://toml.io/en/)</span>
+</span><span id="L-75"><a href="#L-75"><span class="linenos">75</span></a><span class="sd">format files. An example file is produced by the `Config.print` function.</span>
+</span><span id="L-76"><a href="#L-76"><span class="linenos">76</span></a>
+</span><span id="L-77"><a href="#L-77"><span class="linenos">77</span></a><span class="sd">The following entries are expected/allowed:</span>
+</span><span id="L-78"><a href="#L-78"><span class="linenos">78</span></a>
+</span><span id="L-79"><a href="#L-79"><span class="linenos">79</span></a><span class="sd">- `indent`, with value a number of spaces or a string to use for indent</span>
+</span><span id="L-80"><a href="#L-80"><span class="linenos">80</span></a><span class="sd">- `include-doc-id`, a boolean to specify whether the document</span>
+</span><span id="L-81"><a href="#L-81"><span class="linenos">81</span></a><span class="sd">  identifier should be included or not</span>
+</span><span id="L-82"><a href="#L-82"><span class="linenos">82</span></a><span class="sd">- `tags`, a table whose entry keys are specific tag classifications</span>
+</span><span id="L-83"><a href="#L-83"><span class="linenos">83</span></a><span class="sd">  (see just below) and whose values are arrays of the tags belonging</span>
+</span><span id="L-84"><a href="#L-84"><span class="linenos">84</span></a><span class="sd">  to that classification. Only tags that need to be handled in a certain</span>
+</span><span id="L-85"><a href="#L-85"><span class="linenos">85</span></a><span class="sd">  way need to be included. The allowed classifications are:</span>
+</span><span id="L-86"><a href="#L-86"><span class="linenos">86</span></a><span class="sd">  - `verbatim` for tags whose contents are to be rendered verbatim</span>
+</span><span id="L-87"><a href="#L-87"><span class="linenos">87</span></a><span class="sd">  - `inline` for tags that are to be inlined</span>
+</span><span id="L-88"><a href="#L-88"><span class="linenos">88</span></a><span class="sd">  - `inline-empty` for tags that are to be inline only when empty</span>
+</span><span id="L-89"><a href="#L-89"><span class="linenos">89</span></a><span class="sd">  - `block` for tags that are to be rendered in block mode</span>
+</span><span id="L-90"><a href="#L-90"><span class="linenos">90</span></a><span class="sd">  - `block-no-indent` for tags that are to be rendered in block</span>
+</span><span id="L-91"><a href="#L-91"><span class="linenos">91</span></a><span class="sd">    mode but that don&#39;t increase the indent level for their contents.</span>
+</span><span id="L-92"><a href="#L-92"><span class="linenos">92</span></a>
+</span><span id="L-93"><a href="#L-93"><span class="linenos">93</span></a><span class="sd">&quot;&quot;&quot;</span>
+</span><span id="L-94"><a href="#L-94"><span class="linenos">94</span></a>
+</span><span id="L-95"><a href="#L-95"><span class="linenos">95</span></a><span class="kn">from</span> <span class="nn">ptx_formatter.formatter</span> <span class="kn">import</span> <span class="n">formatPretext</span><span class="p">,</span> <span class="n">Config</span>
+</span><span id="L-96"><a href="#L-96"><span class="linenos">96</span></a>
+</span><span id="L-97"><a href="#L-97"><span class="linenos">97</span></a><span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="n">formatPretext</span><span class="p">,</span> <span class="n">Config</span><span class="p">]</span>
 </span></pre></div>
 
 

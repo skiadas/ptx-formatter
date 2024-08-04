@@ -5,19 +5,28 @@ PtxFormatter is an opinionated but customizable formatter for PreText. It can be
 
 ## Installation
 
-A wheel and tarball are available. You can install them with:
+Easiest way to get started is to grab the newest version with [pipx](https://pipx.pypa.io/stable/):
 
 ```shell
-pip install --user path_to_wheel
+pipx install --python 3.12 --fetch-missing-python git+https://github.com/skiadas/ptx-formatter.git
 ```
-
-TODO: Add pipx instructions
+Or grab a wheel URL from our [releases page](https://github.com/skiadas/ptx-formatter/releases) and use that instead:
+```shell
+pipx install --python 3.12 --fetch-missing-python https://github.com/skiadas/ptx-formatter/releases/download/v0.0.2b/ptx_formatter-0.0.2-py3-none-any.whl
+```
 
 You should now have a command ready to use:
 ```shell
 ptx-format --version
 ptx-format --help
 ```
+
+For alternative installations, wheels and tarballs are available from the [releases page](https://github.com/skiadas/ptx-formatter/releases). You can install them for example with:
+
+```shell
+pip install --user url_to_wheel
+```
+You will need to be running Python 3.12 or newer, and will need to add the dependencies.
 
 ## Command line Usage
 
