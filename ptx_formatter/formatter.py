@@ -14,12 +14,9 @@ def formatPretext(
     text: str,
     config: Config = None,
 ) -> str:
-  formatter = Formatter(text, config or Config.standard())
-  return formatter.format()
-
-
-class Formatter(ET.TreeBuilder):
-  """A formatter for (valid) XML trees.
+  """Format the provided (valid) XML trees. You can configure
+  the output to some extent by providing your own `ptx_formatter.Config`
+  object.
 
   The formatter follows a simple approach that aims to
   accommodate the option of inline tags. The formatting
@@ -40,6 +37,11 @@ class Formatter(ET.TreeBuilder):
   - Empty tags are rendered in auto-close form when inline, and as
     adjacent open-close tags when in block.
   """
+  formatter = Formatter(text, config or Config.standard())
+  return formatter.format()
+
+
+class Formatter(ET.TreeBuilder):
   final_string: str | None = None
   """The resulting formatted string. Returned from `format`"""
   _pending: list[Element]

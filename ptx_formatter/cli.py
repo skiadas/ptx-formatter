@@ -17,7 +17,7 @@ app = typer.Typer(add_completion=False)
 
 
 @app.command()
-def mainPtx(
+def _mainPtx(
     addDocId: Annotated[
         Optional[bool],
         typer.Option(

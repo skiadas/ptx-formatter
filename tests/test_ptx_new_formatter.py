@@ -9,7 +9,7 @@ from ptx_formatter.utils.config import Config
 WRITE_RESULT_FILES = False
 
 sampleFiles = ["fewNewlines.ptx",
-               "fewWithListing.ptx"]  # TODO: create more test files
+               "fewWithListing.ptx"]
 
 fixedExpressions = [
     """<premise>

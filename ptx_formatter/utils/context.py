@@ -16,13 +16,13 @@ class Context:
 
   def __init__(self: Self, config: Config, indent: Indent = None) -> None:
     self.config = config
-    self.indent = indent or Indent(config.base_indent)
+    self.indent = indent or Indent(config._base_indent)
 
   def get_preference(self: Self, tag: str) -> Preference:
     return self.config.get_pref(tag)
 
   def should_add_doc_id(self: Self) -> bool:
-    return self.config.add_doc_id
+    return self.config._add_doc_id
 
   def must_inline(self: Self, tag: str, is_empty: bool) -> bool:
     pref = self.get_preference(tag)

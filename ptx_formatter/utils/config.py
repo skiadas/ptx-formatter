@@ -1,6 +1,4 @@
-"""
-Represents various settings for the formatter
-"""
+"""Represents various settings for the formatter."""
 from enum import Enum
 
 from os.path import dirname, join
@@ -13,47 +11,64 @@ Preference = Enum(
 
 
 class Config:
+  """A configuration object for the formatter."""
   _tag_prefs: Dict[str, Preference]
   """Preferences regarding how various tags should be formatted."""
-  base_indent: str
+  _base_indent: str
   """The base indent to be used. Defaults to 2 spaces."""
-  add_doc_id: bool
+  _add_doc_id: bool
   """Whether to add the xml identifier at the start."""
 
   def __init__(self: Self, base_indent: str | int = 2):
+    """Create a configuration object with minimal settings."""
     self._tag_prefs = {}
     self.set_indent(base_indent)
-    self.add_doc_id = False
+    self._add_doc_id = False
 
   def get_pref(self: Self, tag: str) -> Preference:
+    """Retrieve the preference setting for a tag string."""
     return self._tag_prefs.get(tag, Preference.No)
 
   def add_tag_prefs(self: Self, prefs: Mapping[str, Preference]):
-    self._tag_prefs = dict(prefs.items())
+    """Add preference settings for tags, in the form of a dictionary."""
+    for k, v in prefs.items():
+      self._tag_prefs[k] = v
 
   def set_indent(self: Self, base_indent: str | int):
+    """
+    Specify the base indent to be used (default is 2 spaces).
+    It can be either a string to be used (e.g. `"\t"`) or
+    a number of spaces to be used.
+    """
     if isinstance(base_indent, int):
-      self.base_indent = " " * base_indent
+      self._base_indent = " " * base_indent
     else:
-      self.base_indent = base_indent
+      self._base_indent = base_indent
 
   def set_add_doc_id(self: Self, add_doc_id: bool):
-    self.add_doc_id = add_doc_id
+    """
+    Specify whether an XML document identifier will be
+    included at the top of the file.
+    """
+    self._add_doc_id = add_doc_id
 
   def print(self: Self) -> str:
-    """Forms a TOML file description of the configuration."""
+    """
+    Forms a [TOML](https://toml.io/en/) file description of the configuration.
+    This is the same format as expected by `fromFile`.
+    """
     doc = tomlkit.TOMLDocument()
     doc.add(
         tomlkit.comment(
             "Set the indent as a number of spaces or a string. Defaults to 2 spaces."
         ))
-    doc.add("indent", self.base_indent)
+    doc.add("indent", self._base_indent)
     doc.add(tomlkit.nl())
     doc.add(
         tomlkit.comment(
             "Specify whether a document id should be included. This option is only relevant when not using the cli, as the cli will overwrite the setting here."
         ))
-    doc.add("include-doc-id", self.add_doc_id)
+    doc.add("include-doc-id", self._add_doc_id)
     doc.add(tomlkit.nl())
     doc.add(tomlkit.nl())
     tags = tomlkit.table()
@@ -81,16 +96,24 @@ class Config:
     tags.add("block", self._make_array(Preference.Block))
     tags.add(
         tomlkit.comment(
-            "block-no-indent tags will not increase the indent of their contents."))
+            "block-no-indent tags will not increase the indent of their contents."
+        ))
     tags.add("block-no-indent", self._make_array(Preference.BlockNoIndent))
     return tomlkit.dumps(doc)
 
   @classmethod
   def standard(cls) -> Self:
+    """Create a standard configuration object."""
     return cls.fromFile(join(dirname(__file__), "..", "config.toml"))
 
   @classmethod
   def fromFile(cls, fp: TextIO | str):
+    """
+    Create a configuration object from the
+    provided [TOML](https://toml.io/en/) file.
+
+    You can use the result produced by `print` as a blueprint.
+    """
     config = cls()
     opts = _read_opts(fp)
     config.set_indent(opts.get('indent', 2))
