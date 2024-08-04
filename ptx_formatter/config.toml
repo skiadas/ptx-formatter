@@ -2,9 +2,74 @@ indent = 2
 include-doc-id = true
 
 [tags]
-verbatim = ["pre", "input", "tests"]
-block = ["ul", "ol", "chapter", "section"]
+verbatim = [
+  "pre",
+  "latex-image-preamble",
+  "latex-image",
+  "latex-preamble",
+  "slate",
+  "sage",
+  "sageplot",
+  "asymptote",
+  "macros",
+  "input",
+  "output",
+  "tests",
+  "prompt",
+  "pre",
+  "pg-code",
+  "tikzpicture",
+  "tikz",
+]
+block = ["ul", "ol", "dl", "chapter", "section", "me", "men", "md", "mdn", "cd"]
 block-no-indent = []
-inline = ["span", "em", "q", "c"]
-inline-empty = ["var"]
-
+inline = [
+  "em",
+  "q",
+  "sq",
+  "c",
+  "pubtitle",
+  "articletitle",
+  "abbr",
+  "init",
+  "acro",
+  "delete",
+  "insert",
+  "stale",
+  "fn",
+  "m",
+  "taxon",
+  "email",
+  "url",
+  "xref",
+  "idx",
+  "notation",
+  "foreign",
+  "term",
+  "alert",
+  "angles",
+  "dblbrackets",
+  "tag",
+  "attr",
+  "mdash",
+  "kbd",
+  "ellipsis",
+  "registered",
+  "permille",
+  "section-mark",
+  "trademark",
+  "copyright",
+  "pilcrow",
+  "midpoint",
+  "swungdash",
+  "times",
+  "solidus",
+  "obelus",
+  "plusminus",
+  "degree",
+  "prime",
+  "dblprime",
+  "fillin",
+  "area",
+]
+inline-empty = ["var", "pretext", "eval"]
