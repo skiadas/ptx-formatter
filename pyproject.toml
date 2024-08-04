@@ -10,16 +10,13 @@ name = "ptx-formatter"
 dynamic = ["version"]
 description = ""
 authors = [
-    {name = "Haris Skiadas", email = "cskiadas@gmail.com"},
-    {name = "Barb Wahl", email = "barb.wahl.1960@gmail.com"},
+    { name = "Haris Skiadas", email = "cskiadas@gmail.com" },
+    { name = "Barb Wahl", email = "barb.wahl.1960@gmail.com" },
 ]
-dependencies = [
-    "typer[all]<1.0.0,>=0.12.3",
-    "tomlkit>=0.13.0",
-]
+dependencies = ["typer[all]<1.0.0,>=0.12.3", "tomlkit>=0.13.0"]
 requires-python = "<4.0,>=3.12"
 readme = "README.md"
-license = {text = "MIT"}
+license = { text = "MIT" }
 
 [project.scripts]
 ptx-format = "ptx_formatter.cli:app"
@@ -51,10 +48,11 @@ lint-diff.cmd = "yapf -rd ptx_formatter tests"
 lint-diff.help = "error if lint produces diffs"
 doc = "pdoc -n -d google -o docs --no-include-undocumented ptx_formatter"
 doc-serve = "pdoc -n -d google  --no-include-undocumented ptx_formatter"
+all = { composite = ["lint", "test", "doc"] }
 
 [tool.yapf]
 based_on_style = "google"
 indent_width = 2
 
 [tool.pytest.ini_options]
-addopts="--html=reports/tests/index.html"
+addopts = "--html=reports/tests/index.html"
