@@ -1,3 +1,6 @@
+"""
+Formatter for PreText and other XML files
+"""
 from typing import Self
 import xml.etree.ElementTree as ET
 
@@ -18,26 +21,25 @@ def formatPretext(
 class Formatter(ET.TreeBuilder):
   """A formatter for (valid) XML trees.
 
-  TODO: Describe the formatting approach
+  The formatter follows a simple approach that aims to
+  accommodate the option of inline tags. The formatting
+  behavior is mainly this:
 
-  The algorithm:
-
-  - When an open tag is encountered, it is appended to a stack of
-    `openTags`, and a new `currentContents` list is created. The
-    previous list is appended to a stack of `pendingContents`.
-    The `indentLevel` is incremented, if needed.
-  - When data or a content are encountered, they are appended to
-    to the `currentContents` list.
-  - When a close tag is encountered, the `currentContents` list
-    is collapsed to form the tag's contents. Then the corresponding
-    open tag is popped from the `openTags` list and combined with
-    the tag's contents to form the entire tag element. Then the
-    `pendingContents` stack is popped and that element becomes again
-    the `currentContents` list. The newly formed tag is then appended
-    to it.
-    The indent level is decremented, if needed.
+  - Elements that contain other elements within them are rendered
+    in "block mode", with the open and close tags on their
+    own lines, and with the contents suitably indented and on
+    separate lines.
+  - Elements that only contain text render in "inline mode",
+    with the open and close tags on the same line as their contents.
+  - Certain tags can be designated as "inline tags". When an element
+    contains only text and inline tags, it renders in "inline mode".
+    This is useful for tags that are meant to enhance the content of
+    a normal line of text, like the `span` or `code` tags in HTML.
+  - Certain tags can be designated as "block tags". These will always
+    render in block mode.
+  - Empty tags are rendered in auto-close form when inline, and as
+    adjacent open-close tags when in block.
   """
-
   final_string: str | None = None
   """The resulting formatted string. Returned from `format`"""
   _pending: list[Element]
