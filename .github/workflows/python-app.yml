@@ -24,6 +24,8 @@ jobs:
       with:
         python-version: "3.12"
         cache: true
+        cache-dependency-path: |
+          ./pdm.lock
       # You are now able to use PDM in your workflow
     - name: Install dependencies
       run: pdm install
