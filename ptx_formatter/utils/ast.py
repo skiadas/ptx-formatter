@@ -24,6 +24,10 @@ class Child(ABC):
   def render_block(self: Self, ctx: Context) -> str:
     """Render the child in block mode."""
 
+  @abstractmethod
+  def is_inlineable(self: Self, ctx: Context) -> bool:
+    """Determine if the child can be inlined."""
+
 
 class Text(Child):
   """Simple class that holds a text string."""
@@ -33,11 +37,17 @@ class Text(Child):
   def __init__(self: Self, txt: str):
     self.txt = txt
 
+  def __str__(self: Self):
+    return "<Text: " + repr(self.txt) + ">"
+
   def render_inline(self: Self, ctx: Context) -> str:
     return xmlescape(self.txt)
 
   def render_block(self: Self, ctx: Context) -> str:
-    return f"{ctx.indent}{self.txt}"
+    return f"{ctx.indent}{xmlescape(self.txt).lstrip()}"
+
+  def is_inlineable(self: Self, ctx: Context) -> bool:
+    return True
 
 
 class Comment(Child):
@@ -56,6 +66,9 @@ class Comment(Child):
 
   def render_block(self: Self, ctx: Context) -> str:
     return f"{ctx.indent}<!--{self.txt}-->"
+
+  def is_inlineable(self: Self, ctx: Context) -> bool:
+    return True
 
 
 class Element(Child):
@@ -101,14 +114,30 @@ class Element(Child):
       # Special case of empty block, render open+close tags
       return f"{ctx.indent}{self._open_tag(False)}{self._close_tag()}"
     childCtx = ctx.get_child_context(self.tag)
-    children = []
-    for ch in self.children:
-      block = ch.render_block(childCtx)
-      if block.lstrip() != "":
-        children.append(block)
-    openTag = f"{ctx.indent}{self._open_tag(False)}\n"
+    childString = self._block_render_children(childCtx)
+    openTag = f"{ctx.indent}{self._open_tag(False)}"
     closeTag = f"{ctx.indent}{self._close_tag()}"
-    return f"{openTag}{'\n'.join(children)}\n{closeTag}"
+    return f"{openTag}{childString}\n{closeTag}"
+
+  def is_inlineable(self: Self, ctx: Context):
+    return ctx.must_inline(self.tag, self._is_empty())
+
+  def _block_render_children(self, ctx):
+    childString = ""
+    lastIsInline = False
+    for ch in self.children:
+      isInlineable = ch.is_inlineable(ctx)
+      if isInlineable and lastIsInline:
+        # combine in existing line
+        childString += ch.render_inline(ctx)
+        lastIsInline = True
+      else:
+        # start new line
+        block = ch.render_block(ctx)
+        if block.lstrip() != "":
+          childString = childString.rstrip() + "\n" + block
+          lastIsInline = isInlineable
+    return childString
 
   def _open_tag(self: Self, inline: bool):
     attrs = [f' {k}="{v}"' for k, v in self.attrs.items()]
@@ -148,18 +177,14 @@ class Element(Child):
        - tag prefers inlined, or
        - tag does not force block and all the element's
          children prefer to be inlined"""
-    if self._must_inline(ctx):
+    if self.is_inlineable(ctx):
       return True
     if self._must_block(ctx):
       return False
     for ch in self.children:
-      if isinstance(ch, Element):
-        if not ch._must_inline(ctx):
-          return False
+      if not ch.is_inlineable(ctx):
+        return False
     return True
-
-  def _must_inline(self: Self, ctx: Context):
-    return ctx.must_inline(self.tag, self._is_empty())
 
   def _must_block(self: Self, ctx: Context):
     return ctx.must_block(self.tag)

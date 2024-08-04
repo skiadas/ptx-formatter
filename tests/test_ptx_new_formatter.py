@@ -18,6 +18,7 @@ fixedExpressions = [
     <p>A paragraph</p>
   </premise>
   <response>
+    Some text with some math x &gt; 3
     <p>Another paragraph</p>
   </response>
 </section>""", """<block>
