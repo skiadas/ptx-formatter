@@ -138,7 +138,7 @@ class Element(Child):
   def _render_root(self: Self, ctx: Context):
     content = "\n".join([ch.render_block(ctx) for ch in self.children])
     if ctx.should_add_doc_id():
-      return """<?xml version="1.0" encoding="UTF-8"?>\n\n""" + content
+      return """<?xml version="1.0" encoding="UTF-8" ?>\n\n""" + content
     else:
       return content
 
