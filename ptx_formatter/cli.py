@@ -92,7 +92,7 @@ def mainPtx(
   """
   if addDocId is None:
     addDocId = outputFile is not None
-  config = assemble_config(configFile, tabIndent, indent, addDocId)
+  config = assemble_config(configFile, indent, tabIndent, addDocId)
   if showConfig:
     sys.stdout.write(config.print())
     raise typer.Exit()
