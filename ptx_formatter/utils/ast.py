@@ -8,6 +8,7 @@ from typing import Dict, Self, TypeAlias
 
 from ptx_formatter.utils.context import Context
 from ptx_formatter.utils.config import Preference
+from xml.sax.saxutils import escape as xmlescape
 
 Attrs: TypeAlias = Dict[str, str]
 
@@ -33,7 +34,7 @@ class Text(Child):
     self.txt = txt
 
   def render_inline(self: Self, ctx: Context) -> str:
-    return self.txt
+    return xmlescape(self.txt)
 
   def render_block(self: Self, ctx: Context) -> str:
     return f"{ctx.indent}{self.txt}"
