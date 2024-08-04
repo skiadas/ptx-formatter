@@ -15,11 +15,9 @@ authors = [
 ]
 dependencies = [
     "typer[all]<1.0.0,>=0.12.3",
-    "pytest-html>=4.1.1",
-    "pdoc>=14.6.0",
     "tomlkit>=0.13.0",
 ]
-requires-python = "<4.0,>=3.10"
+requires-python = "<4.0,>=3.11"
 readme = "README.md"
 license = {text = "MIT"}
 
