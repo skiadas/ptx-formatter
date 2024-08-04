@@ -29,9 +29,12 @@ fixedExpressions = [
   <pre>Pre stuff
   Indent being respected
   </pre>
-  <input>code here
+  <input>code here and must escape xml specials
+
+  #include &lt;stdio.h&gt;
 
   must preserve Indenting
+  And ampersand: &amp;
   </input>
   <tests>
 Tests here
