@@ -83,8 +83,6 @@ class Element(Child):
     return self
 
   def render_inline(self: Self, ctx: Context) -> str:
-    # TODO: should warning/error if tag should be
-    # rendered in block or verbatim form
     if self.children == []:
       return self._self_closing_tag(True)
     childStrings = [ch.render_inline(ctx) for ch in self.children]
@@ -112,13 +110,11 @@ class Element(Child):
     return f"{openTag}{'\n'.join(children)}\n{closeTag}"
 
   def _open_tag(self: Self, inline: bool):
-    # TODO: Add attrs multiline option if not inline
     attrs = [f' {k}="{v}"' for k, v in self.attrs.items()]
 
     return f"<{self.tag}{''.join(attrs)}>"
 
   def _self_closing_tag(self: Self, inline: bool):
-    # TODO: Add attrs multiline option if not inline
     attrs = [f' {k}="{v}"' for k, v in self.attrs.items()]
 
     return f"<{self.tag}{''.join(attrs)} />"
