@@ -28,6 +28,10 @@ jobs:
           path: docs
           run-id: ${{ needs.build.outputs.runId }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload docs artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs/
       - id: deployment
         uses: actions/deploy-pages@v4
 
