@@ -48,18 +48,3 @@ jobs:
       with:
         name: dist
         path: dist/
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref_type == 'tag'
-    permissions:
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - id: deployment
-        uses: actions/deploy-pages@v4
-
