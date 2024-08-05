@@ -23,6 +23,8 @@ jobs:
         with:
           name: dist
           path: dist
+          run-id: ${{ needs.build.outputs.runId }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
