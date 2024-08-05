@@ -12,6 +12,7 @@ jobs:
     uses: ./.github/workflows/python-app.yml
     secrets: inherit
   deploy:
+    needs: build
     runs-on: ubuntu-latest
     permissions:
       pages: write

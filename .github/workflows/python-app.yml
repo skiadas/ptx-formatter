@@ -7,6 +7,10 @@ on:
   pull_request:
     branches: [ "main" ]
   workflow_call:
+    outputs:
+      runId:
+        description: "The run-id of the workflow"
+        value: $${{ github.run_id }}
 
 permissions:
   contents: read
