@@ -10,7 +10,7 @@ on:
     outputs:
       runId:
         description: "The run-id of the workflow"
-        value: $${{ github.run_id }}
+        value: ${{ github.run_id }}
 
 permissions:
   contents: read
