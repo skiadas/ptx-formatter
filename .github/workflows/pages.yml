@@ -26,6 +26,8 @@ jobs:
         with:
           name: docs
           path: docs
+          run-id: ${{ needs.build.outputs.runId }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
       - id: deployment
         uses: actions/deploy-pages@v4
 
