@@ -8,7 +8,7 @@ build-backend = "pdm.backend"
 [project]
 name = "ptx-formatter"
 dynamic = ["version"]
-description = ""
+description = "A customizable formatter for PreText documents"
 authors = [
     { name = "Haris Skiadas", email = "cskiadas@gmail.com" },
     { name = "Barb Wahl", email = "barb.wahl.1960@gmail.com" },
