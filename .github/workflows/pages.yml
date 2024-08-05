@@ -13,7 +13,6 @@ jobs:
     secrets: inherit
   deploy:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' || github.ref_type == 'tag'
     permissions:
       pages: write
       id-token: write
@@ -21,6 +20,11 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Download pages artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: docs
+          path: docs
       - id: deployment
         uses: actions/deploy-pages@v4
 
