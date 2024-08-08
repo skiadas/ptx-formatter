@@ -66,12 +66,14 @@ class Formatter(ET.TreeBuilder):
 
   def start(self, tag: str, attrs: Attrs):
     # Need to fix the namespace-related attributes
+    tag = self._ns.adjust_str(tag)
     attrs = self._ns.adjust_attrs(attrs)
     attrs.update(self._ns.process_new_ns())
     self._pending.append(self._current)
     self._current = Element(tag, attrs)
 
   def end(self, closeTag: str):
+    closeTag = self._ns.adjust_str(closeTag)
     if closeTag != self._current.tag:
       raise RuntimeError(f"tag {self._current.tag} was matched by {closeTag}")
     self._current = self._pending.pop().addChild(self._current)

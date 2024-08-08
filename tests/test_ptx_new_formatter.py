@@ -42,7 +42,10 @@ Tests here
 
   must also preserve
   </tests>
-</program>"""
+</program>""", """
+<pretext xmlns:xi="http://www.w3.org/2001/XInclude">
+  <xi:include href="./bookinfo.xml" />
+</pretext>""".strip()
 ]
 
 
