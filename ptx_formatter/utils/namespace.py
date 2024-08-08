@@ -20,17 +20,16 @@ class Namespace:
     self._active_ns = {'http://www.w3.org/XML/1998/namespace': 'xml'}
     self._new_ns = None
 
+  def adjust_str(self: Self, s: str) -> str:
+    m = NAMESPACED_PATTERN.search(s)
+    if m is not None:
+      prefix = self._active_ns[m[1]]
+      return f"{prefix}:{m[2]}"
+    else:
+      return s
+
   def adjust_attrs(self: Self, attrs: Attrs) -> Attrs:
-    newAttrs = {}
-    for k, v in attrs.items():
-      m = NAMESPACED_PATTERN.search(k)
-      if m is not None:
-        # m[1] is a namespace uri. m[2] is the remaining prefix
-        prefix = self._active_ns[m[1]]
-        newAttrs[f"{prefix}:{m[2]}"] = v
-      else:
-        newAttrs[k] = v
-    return newAttrs
+    return {self.adjust_str(k): v for k, v in attrs.items()}
 
   def process_new_ns(self: Self):
     value = self._new_ns
