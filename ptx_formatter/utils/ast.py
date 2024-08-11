@@ -9,6 +9,7 @@ from typing import Dict, Self, TypeAlias
 from ptx_formatter.utils.context import Context
 from ptx_formatter.utils.config import Preference
 from xml.sax.saxutils import escape as xmlescape, unescape as xmlunescape
+from functools import cmp_to_key
 
 Attrs: TypeAlias = Dict[str, str]
 
@@ -143,12 +144,12 @@ class Element(Child):
     return childString
 
   def _open_tag(self: Self, inline: bool):
-    attrs = [f' {k}="{v}"' for k, v in self.attrs.items()]
+    attrs = process_attrs(self.attrs)
 
     return f"<{self.tag}{''.join(attrs)}>"
 
   def _self_closing_tag(self: Self, inline: bool):
-    attrs = [f' {k}="{v}"' for k, v in self.attrs.items()]
+    attrs = process_attrs(self.attrs)
 
     return f"<{self.tag}{''.join(attrs)} />"
 
@@ -195,3 +196,28 @@ class Element(Child):
 
   def _must_block(self: Self, ctx: Context):
     return ctx.must_block(self.tag)
+
+
+def process_attrs(attrs: Attrs) -> Attrs:
+  sorted_items = sorted(attrs.items(), key=cmp_to_key(compare_attrs))
+  return [f' {k}="{v}"' for k, v in sorted_items]
+
+
+def compare_attrs(a: tuple[str, str], b: tuple[str, str]) -> int:
+  k1 = a[0]
+  k2 = b[0]
+  if k1 == k2:
+    return 0
+  # Ids should come first
+  if k1 == "xml:id":
+    return -1
+  if k2 == "xml:id":
+    return 1
+  # Namespace declarations should come last
+  if k1.startswith("xmlns") and not k2.startswith("xmlns"):
+    return 1
+  if k2.startswith("xmlns") and not k1.startswith("xmlns"):
+    return -1
+  if k1 < k2:
+    return -1
+  return 1

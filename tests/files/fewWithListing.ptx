@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <listing>
-  <program language="python" interactive="activecode">
+  <program interactive="activecode" language="python">
     <input>
     class MyClass:
     ^^^^
