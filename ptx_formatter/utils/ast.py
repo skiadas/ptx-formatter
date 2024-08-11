@@ -75,6 +75,27 @@ class Comment(Child):
     return True
 
 
+class Processing(Child):
+  """Simple class that holds a processing instruction."""
+
+  txt: str
+
+  def __init__(self: Self, txt: str):
+    self.txt = txt
+
+  def __str__(self: Self) -> str:
+    return f"<?{self.txt}?>"
+
+  def render_inline(self: Self, ctx: Context) -> str:
+    return f"<?{self.txt}?>"
+
+  def render_block(self: Self, ctx: Context) -> str:
+    return f"{ctx.indent}<?{self.txt}?>"
+
+  def is_inlineable(self: Self, ctx: Context) -> bool:
+    return False
+
+
 class Element(Child):
   """Holds an actual element, with its open and close tags,
      attributes and child elements.

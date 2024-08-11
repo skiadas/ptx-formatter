@@ -4,7 +4,7 @@ Formatter for PreText and other XML files
 from typing import Self
 import xml.etree.ElementTree as ET
 
-from ptx_formatter.utils.ast import Element, Attrs, Comment, Text
+from ptx_formatter.utils.ast import Element, Attrs, Comment, Text, Processing
 from ptx_formatter.utils.context import Context
 from ptx_formatter.utils.namespace import Namespace
 from ptx_formatter.utils.config import Config
@@ -89,3 +89,6 @@ class Formatter(ET.TreeBuilder):
 
   def end_ns(self: Self, prefix: str):
     self._ns.remove_prefix(prefix)
+
+  def pi(self: Self, target: str, text: str):
+    self._current.addChild(Processing(f"{target} {text}"))
