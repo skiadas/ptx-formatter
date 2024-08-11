@@ -1,10 +1,14 @@
 from enum import Enum
-from typing import Dict, Mapping, Self
+from typing import Dict, Iterable, Mapping, Self
 
 from ptx_formatter.utils.config import Preference, Config
 from ptx_formatter.utils.indent import Indent
 
+import re
+
 Mode = Enum('Mode', ['Block', 'Inline', 'Verbatim'])
+
+ESCAPES_REGEX = re.compile("&(amp|gt|lt);")
 
 
 class Context:
@@ -23,6 +27,17 @@ class Context:
 
   def should_add_doc_id(self: Self) -> bool:
     return self.config._add_doc_id
+
+  def should_use_cdata(self: Self, tag: str, contents: str) -> bool:
+    if self.config._cdata == "always":
+      return True
+    if self.config._cdata == "never":
+      return False
+    if isinstance(self.config._cdata, Iterable):
+      return tag in self.config._cdata
+    # Else it's a number. Need to count escaped units in contents
+    escaped_count = len(ESCAPES_REGEX.findall(contents))
+    return escaped_count >= self.config._cdata
 
   def must_inline(self: Self, tag: str, is_empty: bool) -> bool:
     pref = self.get_preference(tag)
