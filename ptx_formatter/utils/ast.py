@@ -8,9 +8,12 @@ from typing import Dict, Self, TypeAlias
 
 from ptx_formatter.utils.context import Context
 from ptx_formatter.utils.config import Preference
-from xml.sax.saxutils import escape as xmlescape
+from xml.sax.saxutils import escape as xmlescape, unescape as xmlunescape
 
 Attrs: TypeAlias = Dict[str, str]
+
+CDATA_OPEN = "<![CDATA["
+CDATA_CLOSE = "]]>"
 
 
 class Child(ABC):
@@ -163,6 +166,10 @@ class Element(Child):
     openTag = self._open_tag(False)
     closeTag = self._close_tag()
     contents = "".join([c.render_inline(ctx) for c in self.children])
+    should_use_cdata = ctx.should_use_cdata(self.tag, contents)
+    if should_use_cdata:
+      contents_unescaped = xmlunescape(contents)
+      return f"{ctx.indent}{openTag}{CDATA_OPEN}{contents_unescaped.rstrip(" ")}{ctx.indent}{CDATA_CLOSE}{closeTag}"
     return f"{ctx.indent}{openTag}{contents.rstrip(" ")}{ctx.indent}{closeTag}"
 
   def _render_root(self: Self, ctx: Context):

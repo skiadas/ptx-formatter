@@ -2,7 +2,7 @@
 from enum import Enum
 
 from os.path import dirname, join
-from typing import Dict, Mapping, Self, TextIO
+from typing import Dict, Literal, Mapping, Self, TextIO
 import tomlkit
 
 Preference = Enum(
@@ -18,12 +18,18 @@ class Config:
   """The base indent to be used. Defaults to 2 spaces."""
   _add_doc_id: bool
   """Whether to add the xml identifier at the start."""
+  _cdata: Literal["always", "never"] | int | list[str]
+  """How to handle cdata. Can be:
+  - the keywords `"always"` or `"never"`
+  - a list of tags to apply cdata to those tags. They must also be set verbatim.
+  - an integer. If the content contains that many characters to be escaped, then use cdata."""
 
   def __init__(self: Self, base_indent: str | int = 2):
     """Create a configuration object with minimal settings."""
     self._tag_prefs = {}
     self.set_indent(base_indent)
     self._add_doc_id = False
+    self._cdata = "never"
 
   def get_pref(self: Self, tag: str) -> Preference:
     """Retrieve the preference setting for a tag string."""
@@ -52,6 +58,14 @@ class Config:
     """
     self._add_doc_id = add_doc_id
 
+  def set_cdata(self: Self,
+                cdata: Literal["always", "never"] | int | list[str]):
+    """Specify how to handle cdata. The parameter can be:
+    - the keywords `"always"` or `"never"`
+    - a list of tags to apply cdata to those tags. They must also be set verbatim.
+    - an integer. If the content contains that many characters to be escaped, then use cdata."""
+    self._cdata = cdata
+
   def print(self: Self) -> str:
     """
     Forms a [TOML](https://toml.io/en/) file description of the configuration.
@@ -69,6 +83,15 @@ class Config:
             "Specify whether a document id should be included. This option is only relevant when not using the cli, as the cli will overwrite the setting here."
         ))
     doc.add("include-doc-id", self._add_doc_id)
+    doc.add(tomlkit.nl())
+    doc.add(
+        tomlkit.comment(
+            """Determines when a cdata block should be used in a verbatim tag. The options are:
+- The strings "always" or "never", indicating that cdata should always/never be used in (verbatim tags)
+- A list of tag strings. These must also be marked as verbatim. Then cdata will be used in those blocks only.
+- An integer number. If the contents of the block contain at least that many characters that would need escaping,
+  then a cdata block will be used instead."""))
+    doc.add("use-cdata", self._cdata)
     doc.add(tomlkit.nl())
     doc.add(tomlkit.nl())
     tags = tomlkit.table()
@@ -118,6 +141,7 @@ class Config:
     opts = _read_opts(fp)
     config.set_indent(opts.get('indent', 2))
     config.set_add_doc_id(opts.get('include-doc-id', False))
+    config.set_cdata(opts.get('use-cdata', "never"))
     prefs = {}
     for k, tagList in opts.get('tags', {}).items():
       pref = preference_from_string(k)
