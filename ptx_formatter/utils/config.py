@@ -23,6 +23,16 @@ class Config:
   - the keywords `"always"` or `"never"`
   - a list of tags to apply cdata to those tags. They must also be set verbatim.
   - an integer. If the content contains that many characters to be escaped, then use cdata."""
+  _multiline_attrs: tuple[Literal["never"] | int, int]
+  """
+  Sets the behavior for multiline-attributes: Whether they should exist and
+  how much to indent.
+  - `have_multiline` is either `"never"` or the number of attributes
+    that need to be present before multiline is triggered.
+  - `multiline_indent is the number of spaces used when indenting multiline arguments.
+    The value 0 is special: It indicates that the first attribute goes in the
+    open tag line, and subsequent attributes line up with it.
+  """
 
   def __init__(self: Self, base_indent: str | int = 2):
     """Create a configuration object with minimal settings."""
@@ -66,6 +76,20 @@ class Config:
     - an integer. If the content contains that many characters to be escaped, then use cdata."""
     self._cdata = cdata
 
+  def set_multiline_attrs(self: Self,
+                          have_multiline: Literal["never"] | int = "never",
+                          multiline_indent: int = 1):
+    """
+    Sets the behavior for multiline-attributes: Whether they should exist and
+    how much to indent.
+    - `have_multiline` is either `"never"` or the number of attributes
+      that need to be present before multiline is triggered.
+    - `multiline_indent is the number of spaces used when indenting multiline arguments.
+      The value 0 is special: It indicates that the first attribute goes in the
+      open tag line, and subsequent attributes line up with it.
+    """
+    self._multiline_attrs = (have_multiline, multiline_indent)
+
   def print(self: Self) -> str:
     """
     Forms a [TOML](https://toml.io/en/) file description of the configuration.
@@ -92,6 +116,21 @@ class Config:
 - An integer number. If the contents of the block contain at least that many characters that would need escaping,
   then a cdata block will be used instead."""))
     doc.add("use-cdata", self._cdata)
+    doc.add(tomlkit.nl())
+    doc.add(
+        tomlkit.comment(
+            """Determines whether to place multiple arguments on multiple lines. It may be:
+- The string "never" (default), meaning that attributes never go on multiple lines.
+- An integer number. If the number of attributes equals or exceeds this number then the attributes are
+  rendered each on its own line, following the line of the open tag.
+
+The multiline-attribute-indent value determines the amount of spaces that multiline attributes should indent.
+The value 0 is treated specially: It indicates that the first attribute should be in the same line as the opening tag
+and that further attributes should align with it.
+"""))
+    have_multiline, multiline_indent = self._multiline_attrs
+    doc.add("multiline-attributes", have_multiline)
+    doc.add("multiline-attribute-indent", multiline_indent)
     doc.add(tomlkit.nl())
     doc.add(tomlkit.nl())
     tags = tomlkit.table()
@@ -142,6 +181,9 @@ class Config:
     config.set_indent(opts.get('indent', 2))
     config.set_add_doc_id(opts.get('include-doc-id', False))
     config.set_cdata(opts.get('use-cdata', "never"))
+    config.set_multiline_attrs(opts.get("multiline-attributes", "never"),
+                               opts.get("multiline-attribute-indent", 1))
+
     prefs = {}
     for k, tagList in opts.get('tags', {}).items():
       pref = preference_from_string(k)
