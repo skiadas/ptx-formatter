@@ -1,8 +1,6 @@
 from typing import Self
 import unittest
 
-from os.path import dirname, join
-
 from ptx_formatter.utils.config import Config, Preference
 
 
