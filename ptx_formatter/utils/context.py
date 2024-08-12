@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import Dict, Iterable, Mapping, Self
+from typing import Dict, Iterable, Literal, Mapping, Self
 
 from ptx_formatter.utils.config import Preference, Config
 from ptx_formatter.utils.indent import Indent
@@ -38,6 +38,9 @@ class Context:
     # Else it's a number. Need to count escaped units in contents
     escaped_count = len(ESCAPES_REGEX.findall(contents))
     return escaped_count >= self.config._cdata
+
+  def get_multiline_attrs(self: Self) -> tuple[Literal["never"] | int, int]:
+    return self.config._multiline_attrs
 
   def must_inline(self: Self, tag: str, is_empty: bool) -> bool:
     pref = self.get_preference(tag)

@@ -123,9 +123,9 @@ class Element(Child):
 
   def render_inline(self: Self, ctx: Context) -> str:
     if self.children == []:
-      return self._self_closing_tag(True)
+      return self._self_closing_tag(True, ctx)
     childStrings = [ch.render_inline(ctx) for ch in self.children]
-    return f"{self._open_tag(True)}{''.join(childStrings)}{self._close_tag()}"
+    return f"{self._open_tag(True, ctx)}{''.join(childStrings)}{self._close_tag()}"
 
   def render_block(self: Self, ctx: Context) -> str:
     if self.tag is None:
@@ -137,10 +137,10 @@ class Element(Child):
     # Otherwise we render block
     if self.children == []:
       # Special case of empty block, render open+close tags
-      return f"{ctx.indent}{self._open_tag(False)}{self._close_tag()}"
+      return f"{ctx.indent}{self._open_tag(False, ctx)}{self._close_tag()}"
     childCtx = ctx.get_child_context(self.tag)
     childString = self._block_render_children(childCtx)
-    openTag = f"{ctx.indent}{self._open_tag(False)}"
+    openTag = f"{ctx.indent}{self._open_tag(False, ctx)}"
     closeTag = f"{ctx.indent}{self._close_tag()}"
     return f"{openTag}{childString}\n{closeTag}"
 
@@ -164,15 +164,17 @@ class Element(Child):
           lastIsInline = isInlineable
     return childString
 
-  def _open_tag(self: Self, inline: bool):
+  def _open_tag(self: Self, inline: bool, ctx: Context) -> str:
+    return f"{self._tag_start(inline, ctx)}>"
+
+  def _self_closing_tag(self: Self, inline: bool, ctx: Context) -> str:
+    return f"{self._tag_start(inline, ctx)} />"
+
+  def _tag_start(self: Self, inline: bool, ctx: Context) -> str:
     attrs = process_attrs(self.attrs)
+    attrs_string = self._combine_attrs(attrs, inline, ctx)
 
-    return f"<{self.tag}{''.join(attrs)}>"
-
-  def _self_closing_tag(self: Self, inline: bool):
-    attrs = process_attrs(self.attrs)
-
-    return f"<{self.tag}{''.join(attrs)} />"
+    return f"<{self.tag}{attrs_string}"
 
   def _close_tag(self: Self):
     return f"</{self.tag}>"
@@ -185,7 +187,7 @@ class Element(Child):
     return pref == Preference.Verbatim
 
   def _render_verbatim(self: Self, ctx: Context):
-    openTag = self._open_tag(False)
+    openTag = self._open_tag(False, ctx)
     closeTag = self._close_tag()
     contents = "".join([c.render_inline(ctx) for c in self.children])
     should_use_cdata = ctx.should_use_cdata(self.tag, contents)
@@ -218,9 +220,26 @@ class Element(Child):
   def _must_block(self: Self, ctx: Context):
     return ctx.must_block(self.tag)
 
+  def _combine_attrs(self: Self, items: list[str], inline: bool,
+                     ctx: Context) -> str:
+    if len(items) == 0:
+      return ""
+    multiline_attrs, multi_attr_indent = ctx.get_multiline_attrs()
+    if inline or multiline_attrs == "never" or multiline_attrs > len(items):
+      return ''.join(items)
+    else:
+      strings = [f"{ctx.indent}{item}" for item in items]
+      if multi_attr_indent > 0:
+        extra = "\n" + (multi_attr_indent - 1) * " "
+        return "".join([extra + s for s in strings])
+      else:
+        extra = "\n" + (1 + len(self.tag)) * " "
+        return strings[0] + "".join([extra + s for s in strings[1:]])
+
 
 def process_attrs(attrs: Attrs) -> Attrs:
   sorted_items = sorted(attrs.items(), key=cmp_to_key(compare_attrs))
+
   return [f' {k}="{v}"' for k, v in sorted_items]
 
 
