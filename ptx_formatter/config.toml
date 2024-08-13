@@ -9,8 +9,8 @@ use-cdata = "never"
 multiline-attributes = "never"
 multiline-attribute-indent = 1
 
-emptyline-before = []
-emptyline-after = []
+emptyline-before = ["book", "part"]
+emptyline-after = ["book", "part"]
 
 
 # Only add to these lists of tags for cases where you want to force the behavior.
