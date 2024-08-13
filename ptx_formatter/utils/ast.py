@@ -53,6 +53,8 @@ class Text(Child):
   def is_inlineable(self: Self, ctx: Context) -> bool:
     return True
 
+  def append(self: Self, el: Self):
+    self.txt += el.txt
 
 class Comment(Child):
   """Simple class that holds a comment line."""
@@ -118,7 +120,11 @@ class Element(Child):
     return f"<{self.tag} ...>"
 
   def addChild(self: Self, child: Child) -> Self:
-    self.children.append(child)
+    if isinstance(child, Text) and len(self.children) > 0 and isinstance(self.children[-1], Text):
+      # Must combine text instances:
+      self.children[-1].append(child)
+    else:
+      self.children.append(child)
     return self
 
   def render_inline(self: Self, ctx: Context) -> str:
