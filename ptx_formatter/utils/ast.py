@@ -259,7 +259,8 @@ class Element(Child):
     return f"{self._tag_start(inline, ctx)}>"
 
   def _self_closing_tag(self: Self, inline: bool, ctx: Context) -> str:
-    return f"{self._tag_start(inline, ctx)} />"
+    space = " " if ctx.use_self_closing_space() else ""
+    return f"{self._tag_start(inline, ctx)}{space}/>"
 
   def _tag_start(self: Self, inline: bool, ctx: Context) -> str:
     attrs = process_attrs(self.attrs)

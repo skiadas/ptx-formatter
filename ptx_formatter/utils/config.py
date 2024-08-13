@@ -43,6 +43,11 @@ class Config:
   Note that if a newline should be added because of both the previous tag
   and the next tag, then only one newline is inserted.
   """
+  _self_closing_space: bool
+  """
+  If True, a space is present after the tag/attributes and before the closing />
+  in a self-closing tag.
+  """
 
   def __init__(self: Self, base_indent: str | int = 2):
     """Create a configuration object with minimal settings."""
@@ -52,6 +57,7 @@ class Config:
     self._cdata = "never"
     self._emptyline_after = []
     self._emptyline_before = []
+    self._self_closing_space = True
 
   def get_pref(self: Self, tag: str) -> Preference:
     """Retrieve the preference setting for a tag string."""
@@ -108,6 +114,9 @@ class Config:
   def set_emptyline_after(self: Self, tags: list[str]):
     self._emptyline_after = tags
 
+  def set_self_closing_space(self: Self, b: bool):
+    self._self_closing_space = b
+
   def print(self: Self) -> str:
     """
     Forms a [TOML](https://toml.io/en/) file description of the configuration.
@@ -145,6 +154,12 @@ class Config:
         ))
     doc.add("emptyline-before", self._emptyline_before)
     doc.add("emptyline-after", self._emptyline_after)
+    doc.add(tomlkit.nl())
+    doc.add(
+        tomlkit.comment(
+            "Determines when if a space should be used at the end in a self-closing tag."
+        ))
+    doc.add("self-closing-space", self._self_closing_space)
     doc.add(tomlkit.nl())
     doc.add(tomlkit.nl())
     tags = tomlkit.table()
@@ -199,6 +214,7 @@ class Config:
                                opts.get("multiline-attribute-indent", 1))
     config.set_emptyline_before(opts.get("emptyline-before", []))
     config.set_emptyline_after(opts.get("emptyline-after", []))
+    config.set_self_closing_space(opts.get("self-closing-space", True))
     prefs = {}
     for k, tagList in opts.get('tags', {}).items():
       pref = preference_from_string(k)

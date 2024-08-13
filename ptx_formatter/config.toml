@@ -12,6 +12,7 @@ multiline-attribute-indent = 1
 emptyline-before = ["book", "part"]
 emptyline-after = ["book", "part"]
 
+use-self-closing-space = true
 
 # Only add to these lists of tags for cases where you want to force the behavior.
 
