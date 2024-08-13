@@ -85,7 +85,7 @@ class Comment(Child):
     return f"<!--{self.txt}-->"
 
   def is_inlineable(self: Self, ctx: Context) -> bool:
-    return True
+    return False
 
 
 class Processing(Child):
@@ -169,6 +169,7 @@ class Element(Child):
     return f"{self._open_tag(True, ctx)}{' '.join(childStrings)}{self._close_tag()}"
 
   def render_block(self: Self, ctx: Context) -> str:
+    self._recognize_inline_comments()
     self._remove_empty_lines()
     self._insert_needed_emptylines(ctx)
     if self.tag is None:
@@ -199,8 +200,6 @@ class Element(Child):
           new_children.append(EmptyLine())
         new_children.append(el)
         if ctx.must_emptyline_after(tag) and not_at_end(self.children, idx):
-          print(new_children, idx, [str(ch) for ch in self.children],
-                not_at_end(self.children, idx))
           new_children.append(EmptyLine())
       else:
         new_children.append(el)
@@ -230,6 +229,28 @@ class Element(Child):
           lastIsInline = isInlineable
           lastLineEmpty = False
     return childString
+
+  def _recognize_inline_comments(self: Self):
+    for idx, el in enumerate(self.children):
+      if isinstance(el, Element):
+        nextEl = self._child_at_index(idx + 1)
+        nextNextEl = self._child_at_index(idx + 2)
+        if isinstance(nextEl, Comment):
+          del self.children[idx]
+          del self.children[idx]
+          self.children.insert(idx, ElementWithInlineComment(el, "", nextEl))
+        elif is_only_spaces(nextEl) and isinstance(nextNextEl, Comment):
+          del self.children[idx]
+          del self.children[idx]
+          del self.children[idx]
+          self.children.insert(
+              idx, ElementWithInlineComment(el, nextEl.txt, nextNextEl))
+
+  def _child_at_index(self: Self, idx: int) -> Child | None:
+    if idx < len(self.children):
+      return self.children[idx]
+    else:
+      return None
 
   def _remove_empty_lines(self: Self):
     self.children = [el for el in self.children if not is_blank_string(el)]
@@ -307,6 +328,33 @@ class Element(Child):
         return strings[0] + "".join([extra + s for s in strings[1:]])
 
 
+class ElementWithInlineComment(Child):
+  """Holds an element that is followed by an inlined comment
+  and some spacing. This spacing and comment are to be preserved."""
+  el: Element
+  spacing: Text
+  comment: Comment
+
+  def __init__(self: Self, el: Element, spacing: str, comment: Comment) -> None:
+    self.el = el
+    self.spacing = spacing
+    self.comment = comment
+
+  def render_inline(self: Self, ctx: Context) -> str:
+    return (self.el.render_inline(ctx) + self.spacing +
+            self.comment.render_inline(ctx))
+
+  def render_block(self: Self, ctx: Context) -> str:
+    return (self.el.render_block(ctx) + self.spacing +
+            self.comment.render_inline(ctx))
+
+  def render_verbatim(self: Self, ctx: Context) -> str:
+    raise NotImplementedError
+
+  def is_inlineable(self: Self, ctx: Context) -> bool:
+    return self.el.is_inlineable(ctx)
+
+
 def process_attrs(attrs: Attrs) -> Attrs:
   sorted_items = sorted(attrs.items(), key=cmp_to_key(compare_attrs))
 
@@ -343,3 +391,7 @@ def not_at_end(children: list[Child], idx: int) -> bool:
 
 def is_blank_string(el: Child) -> bool:
   return isinstance(el, Text) and el.txt.strip() == ""
+
+
+def is_only_spaces(el: Child) -> bool:
+  return isinstance(el, Text) and el.txt.strip(" ") == ""
