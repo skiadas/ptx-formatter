@@ -62,3 +62,6 @@ class Context:
 
   def must_emptyline_after(self: Self, tag: str) -> bool:
     return tag in self.config._emptyline_after
+
+  def use_self_closing_space(self: Self) -> bool:
+    return self.config._self_closing_space
