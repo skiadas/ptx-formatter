@@ -29,6 +29,10 @@ class Child(ABC):
     """Render the child in block mode."""
 
   @abstractmethod
+  def render_verbatim(self: Self, ctx: Context) -> str:
+    """Render the child in verbatim mode."""
+
+  @abstractmethod
   def is_inlineable(self: Self, ctx: Context) -> bool:
     """Determine if the child can be inlined."""
 
@@ -45,13 +49,19 @@ class Text(Child):
     return "<Text: " + repr(self.txt) + ">"
 
   def render_inline(self: Self, ctx: Context) -> str:
-    return xmlescape(self.txt)
+    return xmlescape(self.txt).strip()
 
   def render_block(self: Self, ctx: Context) -> str:
     return f"{ctx.indent}{xmlescape(self.txt).lstrip()}"
 
+  def render_verbatim(self: Self, ctx: Context) -> str:
+    return xmlescape(self.txt)
+
   def is_inlineable(self: Self, ctx: Context) -> bool:
     return True
+
+  def append(self: Self, el: Self):
+    self.txt += el.txt
 
 
 class Comment(Child):
@@ -70,6 +80,9 @@ class Comment(Child):
 
   def render_block(self: Self, ctx: Context) -> str:
     return f"{ctx.indent}<!--{self.txt}-->"
+
+  def render_verbatim(self: Self, ctx: Context) -> str:
+    return f"<!--{self.txt}-->"
 
   def is_inlineable(self: Self, ctx: Context) -> bool:
     return True
@@ -91,6 +104,29 @@ class Processing(Child):
 
   def render_block(self: Self, ctx: Context) -> str:
     return f"{ctx.indent}<?{self.txt}?>"
+
+  def render_verbatim(self: Self, ctx: Context) -> str:
+    return f"<?{self.txt}?>"
+
+  def is_inlineable(self: Self, ctx: Context) -> bool:
+    return False
+
+
+class EmptyLine(Child):
+  """Simple class that represents an (inserted) empty line."""
+
+  def __str__(self: Self) -> str:
+    return f"<emptyline>"
+
+  def render_inline(self: Self, ctx: Context) -> str:
+    # TODO: Is this right behavior?
+    return "\n"
+
+  def render_block(self: Self, ctx: Context) -> str:
+    return "\n"
+
+  def render_verbatim(self: Self, ctx: Context) -> str:
+    return "\n"
 
   def is_inlineable(self: Self, ctx: Context) -> bool:
     return False
@@ -118,20 +154,27 @@ class Element(Child):
     return f"<{self.tag} ...>"
 
   def addChild(self: Self, child: Child) -> Self:
-    self.children.append(child)
+    if isinstance(child, Text) and len(self.children) > 0 and isinstance(
+        self.children[-1], Text):
+      # Must combine text instances:
+      self.children[-1].append(child)
+    else:
+      self.children.append(child)
     return self
 
   def render_inline(self: Self, ctx: Context) -> str:
     if self.children == []:
       return self._self_closing_tag(True, ctx)
     childStrings = [ch.render_inline(ctx) for ch in self.children]
-    return f"{self._open_tag(True, ctx)}{''.join(childStrings)}{self._close_tag()}"
+    return f"{self._open_tag(True, ctx)}{' '.join(childStrings)}{self._close_tag()}"
 
   def render_block(self: Self, ctx: Context) -> str:
+    self._remove_empty_lines()
+    self._insert_needed_emptylines(ctx)
     if self.tag is None:
       return self._render_root(ctx)
     if self._is_verbatim_tag(ctx):
-      return self._render_verbatim(ctx)
+      return self.render_verbatim(ctx)
     if self._will_inline(ctx):
       return f"{ctx.indent}{self.render_inline(ctx)}"
     # Otherwise we render block
@@ -147,22 +190,49 @@ class Element(Child):
   def is_inlineable(self: Self, ctx: Context):
     return ctx.must_inline(self.tag, self._is_empty())
 
+  def _insert_needed_emptylines(self: Self, ctx: Context):
+    new_children = []
+    for idx, el in enumerate(self.children):
+      if isinstance(el, Element):
+        tag = el.tag
+        if ctx.must_emptyline_before(tag) and not_at_start(new_children):
+          new_children.append(EmptyLine())
+        new_children.append(el)
+        if ctx.must_emptyline_after(tag) and not_at_end(self.children, idx):
+          print(new_children, idx, [str(ch) for ch in self.children],
+                not_at_end(self.children, idx))
+          new_children.append(EmptyLine())
+      else:
+        new_children.append(el)
+    self.children = new_children
+
   def _block_render_children(self, ctx):
     childString = ""
     lastIsInline = False
+    lastLineEmpty = False
     for ch in self.children:
       isInlineable = ch.is_inlineable(ctx)
       if isInlineable and lastIsInline:
         # combine in existing line
         childString += ch.render_inline(ctx)
         lastIsInline = True
+        lastLineEmpty = False
       else:
         # start new line
         block = ch.render_block(ctx)
-        if block.lstrip() != "":
-          childString = childString.rstrip() + "\n" + block
+        if isinstance(ch, EmptyLine):
+          childString += "\n"
+          lastLineEmpty = True
+        elif block.lstrip() != "":
+          if not lastLineEmpty:
+            childString = childString.rstrip()
+          childString = childString + "\n" + block
           lastIsInline = isInlineable
+          lastLineEmpty = False
     return childString
+
+  def _remove_empty_lines(self: Self):
+    self.children = [el for el in self.children if not is_blank_string(el)]
 
   def _open_tag(self: Self, inline: bool, ctx: Context) -> str:
     return f"{self._tag_start(inline, ctx)}>"
@@ -186,10 +256,10 @@ class Element(Child):
     pref = ctx.get_preference(self.tag)
     return pref == Preference.Verbatim
 
-  def _render_verbatim(self: Self, ctx: Context):
+  def render_verbatim(self: Self, ctx: Context):
     openTag = self._open_tag(False, ctx)
     closeTag = self._close_tag()
-    contents = "".join([c.render_inline(ctx) for c in self.children])
+    contents = "".join([c.render_verbatim(ctx) for c in self.children])
     should_use_cdata = ctx.should_use_cdata(self.tag, contents)
     if should_use_cdata:
       contents_unescaped = xmlunescape(contents)
@@ -261,3 +331,15 @@ def compare_attrs(a: tuple[str, str], b: tuple[str, str]) -> int:
   if k1 < k2:
     return -1
   return 1
+
+
+def not_at_start(children: list[Child]) -> bool:
+  return children != [] and not isinstance(children[-1], EmptyLine)
+
+
+def not_at_end(children: list[Child], idx: int) -> bool:
+  return idx < len(children) - 1
+
+
+def is_blank_string(el: Child) -> bool:
+  return isinstance(el, Text) and el.txt.strip() == ""
