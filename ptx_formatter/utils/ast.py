@@ -174,7 +174,7 @@ class Element(Child):
     self._insert_needed_emptylines(ctx)
     if self.tag is None:
       return self._render_root(ctx)
-    if self._is_verbatim_tag(ctx):
+    if self._is_verbatim_tag(ctx) and self.children != []:
       return self.render_verbatim(ctx)
     if self._will_inline(ctx):
       return f"{ctx.indent}{self.render_inline(ctx)}"
