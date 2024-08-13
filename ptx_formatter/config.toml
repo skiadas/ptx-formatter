@@ -1,76 +1,108 @@
-indent = 2
-include-doc-id = true
-use-ctags = "never"
+# Set the indent as a number of spaces or a string. Defaults to 2 spaces.
+indent = "  "
+
+# Specify whether a document id should be included. This option is only relevant when not using the cli, as the cli will overwrite the setting here.
+include-doc-id = false
+
+use-cdata = "never"
+
+multiline-attributes = "never"
+multiline-attribute-indent = 1
+
+emptyline-before = []
+emptyline-after = []
+
+
+# Only add to these lists of tags for cases where you want to force the behavior.
 
 [tags]
+# Verbatim tags.
 verbatim = [
-  "pre",
-  "latex-image-preamble",
-  "latex-image",
-  "latex-preamble",
-  "slate",
-  "sage",
-  "sageplot",
-  "asymptote",
-  "macros",
-  "input",
-  "output",
-  "tests",
-  "prompt",
-  "pre",
-  "pg-code",
-  "tikzpicture",
-  "tikz",
+    'pre',
+    'latex-image-preamble',
+    'latex-image',
+    'latex-preamble',
+    'slate',
+    'sage',
+    'sageplot',
+    'asymptote',
+    'macros',
+    'input',
+    'output',
+    'tests',
+    'prompt',
+    'pg-code',
+    'tikzpicture',
+    'tikz',
 ]
-block = ["ul", "ol", "dl", "chapter", "section", "me", "men", "md", "mdn", "cd"]
-block-no-indent = []
+# Inline tags will prefer to render themselves inline, and will always render their contents inline.
 inline = [
-  "em",
-  "q",
-  "sq",
-  "c",
-  "pubtitle",
-  "articletitle",
-  "abbr",
-  "init",
-  "acro",
-  "delete",
-  "insert",
-  "stale",
-  "fn",
-  "m",
-  "taxon",
-  "email",
-  "url",
-  "xref",
-  "idx",
-  "notation",
-  "foreign",
-  "term",
-  "alert",
-  "angles",
-  "dblbrackets",
-  "tag",
-  "attr",
-  "mdash",
-  "kbd",
-  "ellipsis",
-  "registered",
-  "permille",
-  "section-mark",
-  "trademark",
-  "copyright",
-  "pilcrow",
-  "midpoint",
-  "swungdash",
-  "times",
-  "solidus",
-  "obelus",
-  "plusminus",
-  "degree",
-  "prime",
-  "dblprime",
-  "fillin",
-  "area",
+    'em',
+    'q',
+    'sq',
+    'c',
+    'pubtitle',
+    'articletitle',
+    'abbr',
+    'init',
+    'acro',
+    'delete',
+    'insert',
+    'stale',
+    'fn',
+    'm',
+    'taxon',
+    'email',
+    'url',
+    'xref',
+    'idx',
+    'notation',
+    'foreign',
+    'term',
+    'alert',
+    'angles',
+    'dblbrackets',
+    'tag',
+    'attr',
+    'mdash',
+    'kbd',
+    'ellipsis',
+    'registered',
+    'permille',
+    'section-mark',
+    'trademark',
+    'copyright',
+    'pilcrow',
+    'midpoint',
+    'swungdash',
+    'times',
+    'solidus',
+    'obelus',
+    'plusminus',
+    'degree',
+    'prime',
+    'dblprime',
+    'fillin',
+    'area',
 ]
-inline-empty = ["var", "pretext", "eval"]
+# Inline-empty tags will only prefer to render themselves inline when they are empty.
+inline-empty = [
+    'var',
+    'pretext',
+    'eval',
+]
+# Block tags will always render themselves and their direct contents in (multiline) block style.
+block = [
+    'ul',
+    'ol',
+    'dl',
+    'chapter',
+    'section',
+    'me',
+    'men',
+    'md',
+    'mdn',
+    'cd',
+]
+# block-no-indent tags will not increase the indent of their contents.
+block-no-indent = []

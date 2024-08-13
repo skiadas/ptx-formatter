@@ -56,3 +56,9 @@ class Context:
     if tagPref == Preference.BlockNoIndent:
       return self
     return Context(self.config, self.indent.incr())
+
+  def must_emptyline_before(self: Self, tag: str) -> bool:
+    return tag in self.config._emptyline_before
+
+  def must_emptyline_after(self: Self, tag: str) -> bool:
+    return tag in self.config._emptyline_after

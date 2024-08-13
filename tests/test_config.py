@@ -9,6 +9,6 @@ class TestConfig(unittest.TestCase):
   def test_load_file(self: Self):
     config = Config.standard()
     self.assertEqual(config._base_indent, "  ")
-    self.assertEqual(config._add_doc_id, True)
+    self.assertEqual(config._add_doc_id, False)
     self.assertEqual(config.get_pref("ul"), Preference.Block)
     self.assertEqual(config.get_pref("var"), Preference.InlineEmpty)

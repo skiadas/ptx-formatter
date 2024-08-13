@@ -53,12 +53,15 @@ class TestPtxFormatter(unittest.TestCase):
 
   def test_formatter_keeps_file_same(self):
     self.maxDiff = None
+    config = Config.standard()
+    config.set_add_doc_id(True)
+
     for filename in sampleFiles:
       with open(join(dirname(__file__), "files", filename),
                 "r",
                 encoding="utf-8") as f:
         data = f.read()
-        transformedData = formatPretext(data) + "\n"
+        transformedData = formatPretext(data, config) + "\n"
         if WRITE_RESULT_FILES:
           with open(join(dirname(__file__), "files", "result-" + filename),
                     "w",
