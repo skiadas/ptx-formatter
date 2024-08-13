@@ -11,7 +11,9 @@ Preference = Enum(
 
 
 class Config:
-  """A configuration object for the formatter."""
+  """A configuration object for the formatter. The details in this object
+  should only matter to developers. Users of the formatter should
+  specify the desired behavior via configuration files."""
   _tag_prefs: Dict[str, Preference]
   """Preferences regarding how various tags should be formatted."""
   _base_indent: str
@@ -124,37 +126,23 @@ class Config:
         ))
     doc.add("include-doc-id", self._add_doc_id)
     doc.add(tomlkit.nl())
-    #     doc.add(
-    #         tomlkit.comment(
-    #             """Determines when a cdata block should be used in a verbatim tag. The options are:
-    # - The strings "always" or "never", indicating that cdata should always/never be used in (verbatim tags)
-    # - A list of tag strings. These must also be marked as verbatim. Then cdata will be used in those blocks only.
-    # - An integer number. If the contents of the block contain at least that many characters that would need escaping,
-    #   then a cdata block will be used instead."""))
+    doc.add(
+        tomlkit.comment(
+            "Determines when a cdata block should be used in a verbatim tag."))
     doc.add("use-cdata", self._cdata)
     doc.add(tomlkit.nl())
-    #     doc.add(
-    #         tomlkit.comment(
-    #             """Determines whether to place multiple arguments on multiple lines. It may be:
-    # - The string "never" (default), meaning that attributes never go on multiple lines.
-    # - An integer number. If the number of attributes equals or exceeds this number then the attributes are
-    #   rendered each on its own line, following the line of the open tag.
-
-    # The multiline-attribute-indent value determines the amount of spaces that multiline attributes should indent.
-    # The value 0 is treated specially: It indicates that the first attribute should be in the same line as the opening tag
-    # and that further attributes should align with it.
-    # """))
+    doc.add(
+        tomlkit.comment(
+            "Determines whether to place multiple arguments on multiple lines, and how to indent them when doing so."
+        ))
     have_multiline, multiline_indent = self._multiline_attrs
     doc.add("multiline-attributes", have_multiline)
     doc.add("multiline-attribute-indent", multiline_indent)
     doc.add(tomlkit.nl())
-    #     doc.add(
-    #         tomlkit.comment("""
-    # Determines if (extra) newlines should be inserted immediately
-    # following or immediately preceding an element, based on the tag.
-    # If the tag is included in the corresponding list below, then an empty line
-    # is inserted.
-    # """))
+    doc.add(
+        tomlkit.comment(
+            "Determine if (extra) newlines should be inserted immediately following or immediately preceding an element"
+        ))
     doc.add("emptyline-before", self._emptyline_before)
     doc.add("emptyline-after", self._emptyline_after)
     doc.add(tomlkit.nl())

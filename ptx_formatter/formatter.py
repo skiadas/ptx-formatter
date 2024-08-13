@@ -14,28 +14,8 @@ def formatPretext(
     text: str,
     config: Config = None,
 ) -> str:
-  """Format the provided (valid) XML trees. You can configure
-  the output to some extent by providing your own `ptx_formatter.Config`
-  object.
-
-  The formatter follows a simple approach that aims to
-  accommodate the option of inline tags. The formatting
-  behavior is mainly this:
-
-  - Elements that contain other elements within them are rendered
-    in "block mode", with the open and close tags on their
-    own lines, and with the contents suitably indented and on
-    separate lines.
-  - Elements that only contain text render in "inline mode",
-    with the open and close tags on the same line as their contents.
-  - Certain tags can be designated as "inline tags". When an element
-    contains only text and inline tags, it renders in "inline mode".
-    This is useful for tags that are meant to enhance the content of
-    a normal line of text, like the `span` or `code` tags in HTML.
-  - Certain tags can be designated as "block tags". These will always
-    render in block mode.
-  - Empty tags are rendered in auto-close form when inline, and as
-    adjacent open-close tags when in block.
+  """Format the provided (valid) XML trees using the provided `ptx_formatter.Config`
+  object. Use a standard Config object if one is not provided.
   """
   formatter = Formatter(text, config or Config.standard())
   return formatter.format()
