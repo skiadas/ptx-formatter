@@ -18,7 +18,10 @@ def formatPretext(
   object. Use a standard Config object if one is not provided.
   """
   formatter = Formatter(text, config or Config.standard())
-  return formatter.format()
+  result = formatter.format()
+  if text.endswith("\n") and not result.endswith("\n"):
+    result += "\n"
+  return result
 
 
 class Formatter(ET.TreeBuilder):

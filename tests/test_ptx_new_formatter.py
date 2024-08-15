@@ -61,7 +61,7 @@ class TestPtxFormatter(unittest.TestCase):
                 "r",
                 encoding="utf-8") as f:
         data = f.read()
-        transformedData = formatPretext(data, config) + "\n"
+        transformedData = formatPretext(data, config)
         if WRITE_RESULT_FILES:
           with open(join(dirname(__file__), "files", "result-" + filename),
                     "w",
