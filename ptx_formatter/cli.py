@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import Annotated, Optional
 
 import sys
@@ -46,6 +47,16 @@ def _mainPtx(
             show_default=False,
         ),
     ] = None,
+    inPlaceFile: Annotated[
+        Optional[Path],
+        typer.Option(
+            "--inplace",
+            "-p",
+            help=
+            "File to process in-place. This option is incompatible with the -f and -o options.",
+            show_default=False,
+        ),
+    ] = None,
     indent: Annotated[
         Optional[int],
         typer.Option(
@@ -91,14 +102,28 @@ def _mainPtx(
   Reformats a PreText XML document to follow a standard format.
   """
   if addDocId is None:
-    addDocId = outputFile is not None
+    addDocId = outputFile is not None or inPlaceFile is not None
   config = assemble_config(configFile, indent, tabIndent, addDocId)
   if showConfig:
     sys.stdout.write(config.print())
     raise typer.Exit()
+  if inPlaceFile is not None:
+    if inputFile is not None or outputFile is not None:
+      print("ERROR: Cannot specify both in-place and input-output file flags")
+      raise typer.Abort()
+    write_in_place(inPlaceFile, config)
+    return
   inputString = (inputFile or sys.stdin).read()
   result = formatPretext(inputString, config)
   (outputFile or sys.stdout).write(result)
+
+
+def write_in_place(inPlaceFile, config):
+  with open(inPlaceFile, "r") as f:
+    inputString = f.read()
+  result = formatPretext(inputString, config)
+  with open(inPlaceFile, "w") as f:
+    f.write(result)
 
 
 def main():
