@@ -36,7 +36,16 @@ ptx-format < inputFile.ptx   > outputFile.ptx
 ```
 You can also specify one or both files as arguments:
 ```shell
-ptx-format -f inputFile.ptx -o outputFile.ptx
+ptx-format inputFile.ptx outputFile.ptx
+```
+
+You can process a file in-place:
+```shell
+ptx-format -p inputFile.ptx
+```
+Or you can in-place process all `*.ptx` files in a directory and its subdirectiories:
+```shell
+ptx-format -pr documentDirectory
 ```
 
 The command allows a number of options. See also `ptx-format --help`.
@@ -44,8 +53,6 @@ The command allows a number of options. See also `ptx-format --help`.
 ### Options
 
 * `--add-doc-type / --skip-doc-type`: Whether to include or skip the XML doc identifier <?xml ...>. The identifier will by default be added if the output is a file and skipped if the output is stdout.
-* `-f, --file FILENAME`: File to use as input. If omitted, read the contents of standard input.
-* `-o, --output FILENAME`: File to use as output. If omitted, write the results to standard output.
 * `-i, --indent INTEGER`: Number of characters for space-indent. Overwrites the standard configuration. Ignored if tab_indent is set.
 * `-t, --tab-indent`: Indent using tabs instead. Overwrites the standard configuration.
 * `-c, --config-file FILENAME`: File to use as configuration. If omitted, a standard configuration file is loaded.

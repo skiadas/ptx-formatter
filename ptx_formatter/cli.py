@@ -1,5 +1,8 @@
+from glob import glob
 from pathlib import Path
+import time
 from typing import Annotated, Optional
+from rich.progress import track
 
 import sys
 import typer
@@ -34,6 +37,16 @@ def _mainPtx(
             "-p",
             help=
             "Whether to process in-place. If this option is present, there should be no output file.",
+            show_default=False,
+        ),
+    ] = False,
+    recursive: Annotated[
+        bool,
+        typer.Option(
+            "--recursive",
+            "-r",
+            help=
+            "Enter recursive mode, converting all *.ptx files. Requires in-place and a directory as inputfile.",
             show_default=False,
         ),
     ] = False,
@@ -103,14 +116,30 @@ def _mainPtx(
   if showConfig:
     sys.stdout.write(config.print())
     raise typer.Exit()
+  if recursive:
+    if not inPlace or input_file is None or not input_file.is_dir():
+      print("ERROR: recursive option requires --in-place and a directory.")
+      raise typer.Abort()
+    return process_recursive(input_file, config)
   if inPlace:
     if output_file is not None:
-      print("ERROR: Cannot specify both --in-place and and output file.")
+      print("ERROR: Cannot specify both --in-place and an output file.")
       raise typer.Abort()
     output_file = input_file
   inputString = read_file_or_stdin(input_file)
   formatted = formatPretext(inputString, config)
   write_file_or_stdout(output_file, formatted)
+
+
+def process_recursive(directory: Path, config: Config) -> None:
+  files = glob("**/*.ptx", root_dir=directory, recursive=True)
+  if sys.stdout.isatty():
+    for file in track(files, description="Processing ..."):
+      write_in_place(directory / file, config)
+  else:
+    for file in files:
+      write_in_place(directory / file, config)
+  raise typer.Exit()
 
 
 def read_file_or_stdin(input_file: Path | None) -> str:

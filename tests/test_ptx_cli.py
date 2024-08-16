@@ -7,6 +7,7 @@ from ptx_formatter.cli import app
 
 from shutil import copyfile
 from os.path import dirname, join
+import os
 
 sampleFiles = ["fewNewlines.ptx", "fewWithListing.ptx"]
 
@@ -54,6 +55,39 @@ class TestPtxCli(unittest.TestCase):
     result = self.runner.invoke(app, ["-i", "2", "-p", str(inputFile)])
     self.assertEqual(result.exit_code, 0)
     self.assertFilesEqual(inputFile, backupFile)
+
+  def test_formatter_can_rewrite_multiple_files_in_place(self):
+    backups = [(self.tmp_path / file,
+                self.tmp_path / file.replace(".ptx", ".backup"))
+               for file in sampleFiles]
+    for inputFile, backupFile in backups:
+      # Create backup file with indentation 2
+      self.runner.invoke(app, ["-i", "2", str(inputFile), str(backupFile)])
+    # Change files in-place with indentation 2
+    result = self.runner.invoke(app, ["-i", "2", "-pr", str(self.tmp_path)])
+    self.assertEqual(result.exit_code, 0)
+    for inputFile, backupFile in backups:
+      self.assertFilesEqual(inputFile, backupFile)
+
+  def test_formatter_can_rewrite_multiple_files_in_subdirectories(self):
+    extraFiles = []
+    os.makedirs(self.tmp_path / "subdirectory")
+    for filename in sampleFiles:
+      subdirFile = "subdirectory/" + filename
+      copyfile(self.tmp_path / filename, self.tmp_path / subdirFile)
+      extraFiles.append(subdirFile)
+
+    backups = [(self.tmp_path / file,
+                self.tmp_path / (file.replace(".ptx", ".backup")))
+               for file in sampleFiles + extraFiles]
+    for inputFile, backupFile in backups:
+      # Create backup file with indentation 2
+      self.runner.invoke(app, ["-i", "2", str(inputFile), str(backupFile)])
+    # Change files in-place with indentation 2
+    result = self.runner.invoke(app, ["-i", "2", "-pr", str(self.tmp_path)])
+    self.assertEqual(result.exit_code, 0)
+    for inputFile, backupFile in backups:
+      self.assertFilesEqual(inputFile, backupFile)
 
   def assertFilesEqual(self, inFile, outFile):
     diff = difflib.unified_diff(getLines(inFile), getLines(outFile))
