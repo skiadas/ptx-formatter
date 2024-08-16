@@ -27,36 +27,16 @@ def _mainPtx(
             "Whether to include or skip the XML doc identifier <?xml ...>. The identifier will by default be added if the output is a file and skipped if the output is stdout.",
             show_default=False,
         )] = None,
-    inputFile: Annotated[
-        Optional[typer.FileText],
+    inPlace: Annotated[
+        bool,
         typer.Option(
-            "--file",
-            "-f",
-            help=
-            "File to use as input. If omitted, read the contents of standard input.",
-            show_default=False,
-        ),
-    ] = None,
-    outputFile: Annotated[
-        Optional[typer.FileTextWrite],
-        typer.Option(
-            "--output",
-            "-o",
-            help=
-            "File to use as output. If omitted, write the results to standard output.",
-            show_default=False,
-        ),
-    ] = None,
-    inPlaceFile: Annotated[
-        Optional[Path],
-        typer.Option(
-            "--inplace",
+            "--in-place",
             "-p",
             help=
-            "File to process in-place. This option is incompatible with the -f and -o options.",
+            "Whether to process in-place. If this option is present, there should be no output file.",
             show_default=False,
         ),
-    ] = None,
+    ] = False,
     indent: Annotated[
         Optional[int],
         typer.Option(
@@ -97,25 +77,54 @@ def _mainPtx(
                                     callback=version_callback,
                                     help="Print the version and exit.",
                                     is_eager=True)] = None,
+    input_file: Annotated[
+        Optional[Path],
+        typer.Argument(
+            help=
+            "File to use as input. If omitted, read the contents of standard input.",
+            show_default=False,
+        ),
+    ] = None,
+    output_file: Annotated[
+        Optional[Path],
+        typer.Argument(
+            help=
+            "File to use as output. If omitted, write the results to standard output.",
+            show_default=False,
+        ),
+    ] = None,
 ):
   """
   Reformats a PreText XML document to follow a standard format.
   """
   if addDocId is None:
-    addDocId = outputFile is not None or inPlaceFile is not None
+    addDocId = output_file is not None or inPlace
   config = assemble_config(configFile, indent, tabIndent, addDocId)
   if showConfig:
     sys.stdout.write(config.print())
     raise typer.Exit()
-  if inPlaceFile is not None:
-    if inputFile is not None or outputFile is not None:
-      print("ERROR: Cannot specify both in-place and input-output file flags")
+  if inPlace:
+    if output_file is not None:
+      print("ERROR: Cannot specify both --in-place and and output file.")
       raise typer.Abort()
-    write_in_place(inPlaceFile, config)
-    return
-  inputString = (inputFile or sys.stdin).read()
-  result = formatPretext(inputString, config)
-  (outputFile or sys.stdout).write(result)
+    output_file = input_file
+  inputString = read_file_or_stdin(input_file)
+  formatted = formatPretext(inputString, config)
+  write_file_or_stdout(output_file, formatted)
+
+
+def read_file_or_stdin(input_file: Path | None) -> str:
+  if input_file is None:
+    return sys.stdin.read()
+  with open(input_file, "r", encoding="utf-8") as f:
+    return f.read()
+
+
+def write_file_or_stdout(output_file: Path | None, data: str) -> str:
+  if output_file is None:
+    return sys.stdout.write(data)
+  with open(output_file, "w", encoding="utf-8") as f:
+    return f.write(data)
 
 
 def write_in_place(inPlaceFile, config):

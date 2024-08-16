@@ -28,9 +28,16 @@ class TestPtxCli(unittest.TestCase):
   def test_formatter_reads_from_file_and_writes_to_file(self):
     inFile = self.tmp_path / sampleFiles[0]
     outFile = self.tmp_path / ("result" + sampleFiles[0])
-    result = self.runner.invoke(app, ["-f", inFile, "-o", outFile])
+    result = self.runner.invoke(app, [str(inFile), str(outFile)])
     self.assertEqual(result.exit_code, 0)
     self.assertFilesEqual(inFile, outFile)
+
+  def test_formatter_can_read_from_file_and_write_to_stdout(self):
+    inFile = self.tmp_path / sampleFiles[0]
+    inputContents = "".join(getLines(inFile)[2:])
+    result = self.runner.invoke(app, [str(inFile)])
+    self.assertEqual(result.exit_code, 0)
+    self.assertEqual(inputContents, result.output)
 
   def test_formatter_can_read_from_stdin_and_write_to_stdout(self):
     inputContents = "".join(getLines(self.tmp_path / sampleFiles[0])[2:])
@@ -42,9 +49,9 @@ class TestPtxCli(unittest.TestCase):
     inputFile = self.tmp_path / sampleFiles[0]
     backupFile = self.tmp_path / ("backup" + sampleFiles[0])
     # Create backup file with indentation 2
-    self.runner.invoke(app, ["-f", inputFile, "-o", backupFile, "-i", "2"])
+    self.runner.invoke(app, ["-i", "2", str(inputFile), str(backupFile)])
     # Change input file in-place with indentation 2
-    result = self.runner.invoke(app, ["-p", inputFile, "-i", "2"])
+    result = self.runner.invoke(app, ["-i", "2", "-p", str(inputFile)])
     self.assertEqual(result.exit_code, 0)
     self.assertFilesEqual(inputFile, backupFile)
 
