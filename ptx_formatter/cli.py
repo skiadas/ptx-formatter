@@ -1,4 +1,8 @@
+from glob import glob
+from pathlib import Path
+import time
 from typing import Annotated, Optional
+from rich.progress import track
 
 import sys
 import typer
@@ -26,26 +30,26 @@ def _mainPtx(
             "Whether to include or skip the XML doc identifier <?xml ...>. The identifier will by default be added if the output is a file and skipped if the output is stdout.",
             show_default=False,
         )] = None,
-    inputFile: Annotated[
-        Optional[typer.FileText],
+    inPlace: Annotated[
+        bool,
         typer.Option(
-            "--file",
-            "-f",
+            "--in-place",
+            "-p",
             help=
-            "File to use as input. If omitted, read the contents of standard input.",
+            "Whether to process in-place. If this option is present, there should be no output file.",
             show_default=False,
         ),
-    ] = None,
-    outputFile: Annotated[
-        Optional[typer.FileTextWrite],
+    ] = False,
+    recursive: Annotated[
+        bool,
         typer.Option(
-            "--output",
-            "-o",
+            "--recursive",
+            "-r",
             help=
-            "File to use as output. If omitted, write the results to standard output.",
+            "Enter recursive mode, converting all *.ptx files. Requires in-place and a directory as inputfile.",
             show_default=False,
         ),
-    ] = None,
+    ] = False,
     indent: Annotated[
         Optional[int],
         typer.Option(
@@ -86,19 +90,78 @@ def _mainPtx(
                                     callback=version_callback,
                                     help="Print the version and exit.",
                                     is_eager=True)] = None,
+    input_file: Annotated[
+        Optional[Path],
+        typer.Argument(
+            help=
+            "File to use as input. If omitted, read the contents of standard input.",
+            show_default=False,
+        ),
+    ] = None,
+    output_file: Annotated[
+        Optional[Path],
+        typer.Argument(
+            help=
+            "File to use as output. If omitted, write the results to standard output.",
+            show_default=False,
+        ),
+    ] = None,
 ):
   """
   Reformats a PreText XML document to follow a standard format.
   """
   if addDocId is None:
-    addDocId = outputFile is not None
+    addDocId = output_file is not None or inPlace
   config = assemble_config(configFile, indent, tabIndent, addDocId)
   if showConfig:
     sys.stdout.write(config.print())
     raise typer.Exit()
-  inputString = (inputFile or sys.stdin).read()
+  if recursive:
+    if not inPlace or input_file is None or not input_file.is_dir():
+      print("ERROR: recursive option requires --in-place and a directory.")
+      raise typer.Abort()
+    return process_recursive(input_file, config)
+  if inPlace:
+    if output_file is not None:
+      print("ERROR: Cannot specify both --in-place and an output file.")
+      raise typer.Abort()
+    output_file = input_file
+  inputString = read_file_or_stdin(input_file)
+  formatted = formatPretext(inputString, config)
+  write_file_or_stdout(output_file, formatted)
+
+
+def process_recursive(directory: Path, config: Config) -> None:
+  files = glob("**/*.ptx", root_dir=directory, recursive=True)
+  if sys.stdout.isatty():
+    for file in track(files, description="Processing ..."):
+      write_in_place(directory / file, config)
+  else:
+    for file in files:
+      write_in_place(directory / file, config)
+  raise typer.Exit()
+
+
+def read_file_or_stdin(input_file: Path | None) -> str:
+  if input_file is None:
+    return sys.stdin.read()
+  with open(input_file, "r", encoding="utf-8") as f:
+    return f.read()
+
+
+def write_file_or_stdout(output_file: Path | None, data: str) -> str:
+  if output_file is None:
+    return sys.stdout.write(data)
+  with open(output_file, "w", encoding="utf-8") as f:
+    return f.write(data)
+
+
+def write_in_place(inPlaceFile, config):
+  with open(inPlaceFile, "r") as f:
+    inputString = f.read()
   result = formatPretext(inputString, config)
-  (outputFile or sys.stdout).write(result)
+  with open(inPlaceFile, "w") as f:
+    f.write(result)
 
 
 def main():
