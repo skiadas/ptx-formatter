@@ -8,3 +8,9 @@ class TestPtxNewlineSettings(ExpressionTestCase):
 <section>
   <p>Some text <em>here</em><em>back-to-back</em> more</p>
 </section>""".strip())
+
+  def test_oneline_pre_tag_should_not_add_spaces(self):
+    self.assertStaysSame("""
+<section>
+  <pre>Some text</pre>
+</section>""".strip())

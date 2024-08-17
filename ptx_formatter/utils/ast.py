@@ -282,11 +282,12 @@ class Element(Child):
     openTag = self._open_tag(False, ctx)
     closeTag = self._close_tag()
     contents = "".join([c.render_verbatim(ctx) for c in self.children])
+    endIndent = str(ctx.indent) if "\n" in contents else ""
     should_use_cdata = ctx.should_use_cdata(self.tag, contents)
     if should_use_cdata:
       contents_unescaped = xmlunescape(contents)
-      return f"{ctx.indent}{openTag}{CDATA_OPEN}{contents_unescaped.rstrip(" ")}{ctx.indent}{CDATA_CLOSE}{closeTag}"
-    return f"{ctx.indent}{openTag}{contents.rstrip(" ")}{ctx.indent}{closeTag}"
+      return f"{ctx.indent}{openTag}{CDATA_OPEN}{contents_unescaped.rstrip(" ")}{endIndent}{CDATA_CLOSE}{closeTag}"
+    return f"{ctx.indent}{openTag}{contents.rstrip(" ")}{endIndent}{closeTag}"
 
   def _render_root(self: Self, ctx: Context):
     content = "\n".join([ch.render_block(ctx) for ch in self.children])
