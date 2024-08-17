@@ -49,7 +49,7 @@ class Text(Child):
     return "<Text: " + repr(self.txt) + ">"
 
   def render_inline(self: Self, ctx: Context) -> str:
-    return xmlescape(self.txt).strip()
+    return xmlescape(self.txt)
 
   def render_block(self: Self, ctx: Context) -> str:
     return f"{ctx.indent}{xmlescape(self.txt).lstrip()}"
@@ -166,7 +166,7 @@ class Element(Child):
     if self.children == []:
       return self._self_closing_tag(True, ctx)
     childStrings = [ch.render_inline(ctx) for ch in self.children]
-    return f"{self._open_tag(True, ctx)}{' '.join(childStrings)}{self._close_tag()}"
+    return f"{self._open_tag(True, ctx)}{''.join(childStrings)}{self._close_tag()}"
 
   def render_block(self: Self, ctx: Context) -> str:
     self._recognize_inline_comments()
@@ -282,11 +282,12 @@ class Element(Child):
     openTag = self._open_tag(False, ctx)
     closeTag = self._close_tag()
     contents = "".join([c.render_verbatim(ctx) for c in self.children])
+    endIndent = str(ctx.indent) if "\n" in contents else ""
     should_use_cdata = ctx.should_use_cdata(self.tag, contents)
     if should_use_cdata:
       contents_unescaped = xmlunescape(contents)
-      return f"{ctx.indent}{openTag}{CDATA_OPEN}{contents_unescaped.rstrip(" ")}{ctx.indent}{CDATA_CLOSE}{closeTag}"
-    return f"{ctx.indent}{openTag}{contents.rstrip(" ")}{ctx.indent}{closeTag}"
+      return f"{ctx.indent}{openTag}{CDATA_OPEN}{contents_unescaped.rstrip(" ")}{endIndent}{CDATA_CLOSE}{closeTag}"
+    return f"{ctx.indent}{openTag}{contents.rstrip(" ")}{endIndent}{closeTag}"
 
   def _render_root(self: Self, ctx: Context):
     content = "\n".join([ch.render_block(ctx) for ch in self.children])
