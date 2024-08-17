@@ -49,7 +49,7 @@ class Text(Child):
     return "<Text: " + repr(self.txt) + ">"
 
   def render_inline(self: Self, ctx: Context) -> str:
-    return xmlescape(self.txt).strip()
+    return xmlescape(self.txt)
 
   def render_block(self: Self, ctx: Context) -> str:
     return f"{ctx.indent}{xmlescape(self.txt).lstrip()}"
@@ -166,7 +166,7 @@ class Element(Child):
     if self.children == []:
       return self._self_closing_tag(True, ctx)
     childStrings = [ch.render_inline(ctx) for ch in self.children]
-    return f"{self._open_tag(True, ctx)}{' '.join(childStrings)}{self._close_tag()}"
+    return f"{self._open_tag(True, ctx)}{''.join(childStrings)}{self._close_tag()}"
 
   def render_block(self: Self, ctx: Context) -> str:
     self._recognize_inline_comments()
