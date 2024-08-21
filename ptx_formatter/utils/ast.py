@@ -186,7 +186,7 @@ class Element(Child):
     childString = self._block_render_children(childCtx)
     openTag = f"{ctx.indent}{self._open_tag(False, ctx)}"
     closeTag = f"{ctx.indent}{self._close_tag()}"
-    return f"{openTag}{childString}\n{closeTag}"
+    return f"{openTag}{childString.rstrip()}\n{closeTag}"
 
   def is_inlineable(self: Self, ctx: Context):
     return ctx.must_inline(self.tag, self._is_empty())

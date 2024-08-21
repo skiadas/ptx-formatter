@@ -40,3 +40,22 @@ class TestPtxNewlineSettings(ExpressionTestCase):
 
   <p>Something else here</p>
 </section>""".strip())
+
+  def test_block_rendering_with_last_element_string_should_not_get_extra_newlines(
+      self):
+    self.assertStaysSame(r"""<chapter>
+  <title>test formatting</title>
+  <p>
+    The Pythagorean Theorem states
+    <me>
+      r = \sqrt{{x^2}+{y^2}}
+    </me>
+    .
+  </p>
+  <p>
+    <md>
+      <mrow>(a+b)^2</mrow>
+    </md>
+    .  Now...
+  </p>
+</chapter>""")
