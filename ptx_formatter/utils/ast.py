@@ -166,7 +166,7 @@ class Element(Child):
     if self.children == []:
       return self._self_closing_tag(True, ctx)
     childStrings = [ch.render_inline(ctx) for ch in self.children]
-    return f"{self._open_tag(True, ctx)}{''.join(childStrings)}{self._close_tag()}"
+    return f"{self._open_tag(True, ctx)}{''.join(childStrings).strip()}{self._close_tag()}"
 
   def render_block(self: Self, ctx: Context) -> str:
     self._recognize_inline_comments()
