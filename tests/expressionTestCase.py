@@ -16,3 +16,6 @@ class ExpressionTestCase(unittest.TestCase):
 
   def assertStaysSame(self: Self, expr: str):
     return self.assertEqual(formatPretext(expr, self.config), expr)
+
+  def assertBecomes(self: Self, input: str, output):
+    return self.assertEqual(formatPretext(input, self.config), output)
