@@ -10,6 +10,7 @@ from ptx_formatter.utils.context import Context
 from ptx_formatter.utils.config import Preference
 from xml.sax.saxutils import escape as xmlescape, unescape as xmlunescape
 from functools import cmp_to_key
+import re
 
 Attrs: TypeAlias = Dict[str, str]
 
@@ -49,7 +50,7 @@ class Text(Child):
     return "<Text: " + repr(self.txt) + ">"
 
   def render_inline(self: Self, ctx: Context) -> str:
-    return xmlescape(self.txt)
+    return simplifySpacing(xmlescape(self.txt))
 
   def render_block(self: Self, ctx: Context) -> str:
     return f"{ctx.indent}{xmlescape(self.txt).lstrip()}"
@@ -170,8 +171,6 @@ class Element(Child):
 
   def render_block(self: Self, ctx: Context) -> str:
     self._recognize_inline_comments()
-    self._remove_empty_lines()
-    self._insert_needed_emptylines(ctx)
     if self.tag is None:
       return self._render_root(ctx)
     if self._is_verbatim_tag(ctx) and self.children != []:
@@ -179,6 +178,8 @@ class Element(Child):
     if self._will_inline(ctx):
       return f"{ctx.indent}{self.render_inline(ctx)}"
     # Otherwise we render block
+    self._remove_empty_lines()
+    self._insert_needed_emptylines(ctx)
     if self.children == []:
       # Special case of empty block, render open+close tags
       return f"{ctx.indent}{self._open_tag(False, ctx)}{self._close_tag()}"
@@ -397,3 +398,7 @@ def is_blank_string(el: Child) -> bool:
 
 def is_only_spaces(el: Child) -> bool:
   return isinstance(el, Text) and el.txt.strip(" ") == ""
+
+
+def simplifySpacing(s: str) -> str:
+  return re.compile("(^[\\s\\n]+)|([\\s\\n]+$)").sub(" ", s)
