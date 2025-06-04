@@ -14,3 +14,9 @@ class TestPtxNewlineSettings(ExpressionTestCase):
 <section>
   <pre>Some text</pre>
 </section>""".strip())
+
+  def test_oneline_cd_tag_should_not_add_spaces(self):
+    self.assertStaysSame("""
+<section>
+  <cd>Some text</cd>
+</section>""".strip())
