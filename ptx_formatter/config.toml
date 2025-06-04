@@ -21,6 +21,9 @@ use-self-closing-space = true
 verbatim = [
     'pre',
     'cd',
+    'preamble',
+    'code',
+    'postamble',
     'latex-image-preamble',
     'latex-image',
     'latex-preamble',
